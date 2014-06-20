@@ -1,0 +1,23 @@
+\section{Related Work}
+\label{sec:rel-work}
+
+The study of techniques for text classification presented here is mostly 
+based on the work by McCallum et al.~\cite{McCallum98acomparison} and 
+Nigam et al.~\cite{Nigam2000}, extensively covered 
+in Section~\ref{sec:methodology}. Within the field of supervised 
+learning, starting from the MNB model presented 
+in~\cite{McCallum98acomparison}, Rennie et al.~\cite{Rennie03tacklingthe} 
+propose a series of transforms, based on Information Retrieval 
+techniques, which improve the performance of MNB, resulting 
+in an enhanced method designated by Transformed Weight-normalized Complement 
+Naive Bayes (TWCNB). In the semi-supervised scope, Mann et al.~\cite{Mann2007a} 
+proposed a general approach to semi-supervised learning, but tested on 
+text classification, designated by Expectation 
+Regularization (XR)~\cite{Mann2007a}. XR is based on exponential-family 
+parametric models, normally trained by MAP estimation. XR adds it with a second 
+term, which attempts to minimize the difference between 
+the predicted posteriors $P(Y|X)$ for unlabeled data and estimated pre-known 
+values for $P(Y|X)$, obtained from empirical 
+data or the labeled data. The method is tested against MNB and MNB + EM, being 
+outperformed by the two in the Simulated\slash Real\slash Aviation\slash Auto 
+(SRAA) text classification task, similar to 20 Newsgroups task.\vertbreak

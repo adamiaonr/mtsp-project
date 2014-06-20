@@ -1,0 +1,32 @@
+\section{Conclusions}
+
+In this work we study the field of semi-supervised learning, applied to the 
+field of text classification. We closely follow the work in~\cite{McCallum98acomparison,Nigam2000}, reporting out 
+understanding of the presented models.\vertbreak
+
+We follow the methods presented by Nigam et al.~\cite{Nigam2000} to implement our 
+versions of the MNB and MNB + EM (including EM-$\lambda$) approaches. We 
+take the well-known 20 Newsgroups dataset~\cite{Lang95}, particularly 
+a version designated by \verb+20news-bydate+, to evaluate the studied 
+semi-supervised models in the context of a real-world dataset. The 
+\verb+20news-bydate+ dataset is manipulated using the Rainbow tools --- developed 
+by the authors of the base literature reviewed in this paper --- in order to 
+pre-process it according to commonly used procedures and divide it 
+into training and test partitions, also creating unlabeled samples for the 
+semi-supervised setting.\vertbreak
+
+Our version of MNB is compared with Rainbow's, producing lower accuracy values 
+for small amounts of labeled data, approaching Rainbow's accuracy rates for 
+higher amounts of labeled data ($|A^\ell| > 5000$). Due to problems with our 
+implementation of MNB + EM, making its results unsuitable for comparison, we 
+use Rainbow's implementation of MNB + EM and EM-$\lambda$ over the 
+\verb+20news-bydate+ dataset to experimentally validate the previously studied 
+semi-supervised methods. We verify that, on average MNB + EM performs better 
+than MNB for $|A^\ell| < 100$, with $11220 \le |A^u| \le 11240$. We also verify that, 
+despite its large variations, for at least one of the test runs performed 
+for every $|A^\ell|$, MNB + EM surpasses MNB. Regarding EM-$\lambda$, while 
+smaller weights for unlabeled data seem to favor accuracy for larger 
+$|A^\ell|$, the best results are always obtained for $\lambda = 1$. For 
+$|A^\ell| \ge 1000$, the results seem intuitive, as the accuracy approaches 
+that of MNB for smaller values of $\lambda$ (i.e. smaller weights given to 
+the unlabeled data).

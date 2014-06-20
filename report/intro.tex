@@ -1,0 +1,21 @@
+\section{Introduction}
+\label{sec:intro}
+
+Semi-supervised learning (SSL) is a branch of machine learning that makes use of 
+unlabeled data in an attempt to improve the performance of purely supervised 
+learning methods in cases where labeled data is `hard to get' and scarce, when compared to 
+unlabeled data~\cite{chapelle2010semi,zhu05survey,zhu2009introduction}. Such scenarios are 
+rather frequent, e.g. in application areas such as text classification, image 
+recognition, web content analysis. Here we focus on 
+the study of specific semi-supervised classification tasks, even though other 
+sub-fields such as semi-supervised regression~\cite{chapelle2010semi} 
+exist.\vertbreak
+
+The work presented in this paper explores the field of semi-supervised learning, 
+applied to a particular problem: text classification. We start by exploring 
+a generative model for text classification --- Multinomial Naive Bayes (MNB)~\cite{McCallum98acomparison} --- still 
+in its fully-supervised form. Based on that model, we then advance to a 
+semi-supervised setting by combining it with the Expected Maximization (EM)~\cite{Nigam2000} 
+algorithm, studying some techniques to augment it. We finally present results 
+from our own and third-party implementations of such models, over the 
+well-known 20 Newsgroups dataset~\cite{Lang95}.

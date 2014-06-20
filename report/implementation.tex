@@ -1,0 +1,55 @@
+\section{Implementation}
+\label{sec:impl}
+
+This section provides noteworthy details on our implementation of the methods 
+introduced in Section~\ref{sec:methodology}.\vertbreak
+
+\subsection{Multinomial Naive Bayes}
+\label{subsec:multinomial-naive-impl}
+
+The computation of the class conditional probabilities $P(a_i|c_j,\theta)$ via 
+expression~\ref{eq:data-naive} involves the 
+multiplication of $|\mathcal{D}|$ probabilities $P(w_{k}|c_j,\theta)$. 
+Considering that text classification tasks work with dictionaries 
+composed by thousands of words (e.g. $\sim$\,60000 for the 20 Newsgroups 
+dataset~\cite{Lang95}), the multiplication result may end up at zero due to 
+floating point precision underflow. To overcome this issue, the same 
+computations can be performed in the logarithmic domain, with 
+expression~\ref{eq:data-naive} becoming:
+\begin{equation}
+\begin{split}
+    \text{log}(P(a_i|c_j,\theta)) &\propto \sum_{k=1}^{|\mathcal{D}|}N_{i,k} \times \text{log}(P(w_{k}|c_j,\theta))
+    \label{eq:data-naive-log}
+\end{split}
+\end{equation}
+
+\subsection{Expectation Maximization (EM)}
+\label{subsec:em-impl}
+
+As we get the values of $P(c_j|a_i,\theta)$ in logarithmic form, the floating 
+point underflow problem may also arise when computing the 
+`log-of-sums' component in expression~\ref{eq:log}. In order to circumvent it, 
+we apply the `Log-Sum-Exp' (LSE) trick, i.e. considering:
+
+\begin{equation}
+\begin{split}
+    \text{log}\sum_{j=1}^{|\mathcal{C}|}P(c_j|a_i,\theta) &= \text{log}\sum_{j=1}^{|\mathcal{C}|}e^{\text{log}(P(c_j|a_i,\theta))}\\
+    &= m + \text{log}\sum_{j=1}^{|\mathcal{C}|}e^{\text{log}(P(c_j|a_i,\theta)) - m}
+    \label{eq:log-sum-exp}
+\end{split}
+\end{equation}
+
+where $m$ is the maximum value of $\text{log}(P(c_j|a_i,\theta))$, for each 
+$a_i$. In our case we also set $P(c_j|a_i,\theta) = 0$ when 
+$\text{log}(P(c_j|a_i,\theta)) - m < p$, i.e. we discard the posteriors which, 
+even after LSE, are still smaller than a threshold 
+$e^p$, e.g. and therefore considered too small to impact the final result. We 
+also use LSE after EM's E step, before applying expression~\ref{eq:class-cond-estimate} 
+over $\mathcal{A}^{u}$.\vertbreak
+
+We only run each EM's M step (see Section~\ref{sec:methodology}), over the 
+unlabeled data $\mathcal{A}^{u}$, since the 
+$\hat{\theta}$ values for $\mathcal{A}^{\ell}$ are previously calculated in 
+step 1 and do not change over the iterations (the respective 
+$P(c_j|a_i,\hat{\theta})$ values do not change during the E step, as these 
+are given).
