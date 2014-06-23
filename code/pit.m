@@ -11,6 +11,11 @@ classdef pit < handle
         % of the NDN router)
         PIT = []
         
+        % dimensions of the PIT, number of contents (rows) and num of 
+        % interfaces (columns)
+        content_n = 0;
+        iface_n = 0;
+        
     end
     
     methods
@@ -22,6 +27,10 @@ classdef pit < handle
             
                 % initialize interface's buffer to zeros
                 obj.PIT = zeros(content_n, iface_n);
+                
+                obj.content_n = content_n;
+                obj.iface_n = iface_n;
+                
             end
         end
         
@@ -65,37 +74,38 @@ classdef pit < handle
         % updates the state of the PIT, according to the Interest inputs,
         % and returns the Interest indexes which should be forwarded
         % upstream
-        function outputs = updateOnInterest(obj, inputs)
+        function remaining_interests = updateOnInterest(obj, inputs)
         
-            % first, collect all the content indexes for which outstanding
+            % 1) collect all the content indexes for which outstanding
             % Interests do not exist yet. these will be the Interests which
             % will be re-forwarded upstream.
-            outputs = ~sum(obj.PIT, 2) & sum(inputs, 2);
+            remaining_interests = diag([~sum(obj.PIT, 2); zeros(obj.content_n, 1)]) * inputs;
             
-            % second, given the inputs on all interfaces, OR it with the
+            % 2) given the inputs on all interfaces, OR it with the
             % PIT contents. One assumes that 'inputs' in a C x I matrix
             % containing all the Interest signals received on the input
             % ports of all the router's interfaces. In short, a '1' entry
             % on position (c,i) in the PIT means that an
             % Interest for content at row c has been received at interface 
             % i and awaiting a corresponding Data object.            
-            obj.PIT = (obj.PIT | inputs);
+            obj.PIT = (obj.PIT | inputs(1:obj.content_n,:));
                         
         end
         
         % updates the state of the PIT, according to the Data inputs, and
-        % returns all the Data indexes which have not been discarded based
+        % returns a (2 x C) X I matrix, containing all Data inputs which 
+        % have not been discarded based
         % on PIT processing (i.e. after discarding unsolicited Data
         % packets)
-        function outputs = updateOnData(obj, inputs)
+        function remaining_data = updateOnData(obj, inputs)
         
             % basically, discard all the row values for which there is no
             % outstanding PIT entry
-            outputs = sum(obj.PIT, 2) & sum(inputs, 2);
+            remaining_data = diag([zeros(obj.content_n, 1); (sum(obj.PIT, 2) & 1)]) * inputs;
             
             % now, free the positions in the PIT (since the awaiting Data
             % packets are about to be forwarded downstream)
-            obj.PIT = (obj.PIT & ~inputs);
+            obj.PIT = (obj.PIT & ~inputs(1:obj.content_n,:));
             
         end
 

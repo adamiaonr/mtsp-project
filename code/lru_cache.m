@@ -15,35 +15,60 @@ classdef lru_cache < cache
     methods
         
         % class constructor
-        function obj = cache(n_content, size)
+        function obj = cache(content_n, size)
             
             if (nargin == 2)
             
                 % initialize cache contents to zeros
-                obj.CACHE = zeros(n_content, size);
+                obj.CACHE = zeros(content_n, size);
                 
                 % auxiliary properties
                 obj.size = size;
-                obj.content_size = n_content;
+                obj.content_n = content_n;
                 
                 % initialize age matrix
-                obj.age = zeros(n_content, 1);
+                obj.age = zeros(content_n, 1);
                 
             end
             
         end
         
-        % updates the state of the cache, according to the Interest inputs
-        function outputs = updateOnInterest(obj, inputs)
-        
-            % first check if the arriving Interests refer to content items
-            % maintained in the cache. if so, save the values in the
-            % output array.
-            outputs = obj.isCached(inputs);
+        % updates the state of the cache, according to the Interest inputs.
+        % one assumes that inputs as a (2 x C) x I array, in which the
+        % first the rows 1 to C are related to Interest signals while those
+        % from (C + 1) to (2 x C) relate to Data signals, and I is the
+        % number of interfaces on which the Interest packets have been
+        % received.
+        function [data_outputs, remaining_interests] = updateOnInterest(obj, inputs)
+
+            % the arrays returned by this method should encode the values 
+            % as (2 x C) x I matrixes, with '0' and '1', for coherence
+            
+            % 1) build the output Data signals
+            
+            % 1.1) get the cached contents at this point
+            cached = obj.getCached;
+                        
+            % 1.2) set the appropriate rows of inputs to [0 0 ... 0], i.e. 
+            % all the row 
+            % indexes i for which cached(i) = 0 AND with i in the range 
+            % 1:C (i.e. only Interest signals). the diag() statement allows
+            % a direct matrix multiplication which 'erases' (i.e. sets to
+            % [0 0 ... 0]) the appropriate rows in inputs.
+            data_outputs = diag([cached ; zeros(n_contents, 1)]) * inputs;
+                        
+            % 1.3) swap the rows from outputs, as the top C rows correspond
+            % to Interest signals, while the bottom C rows to Data signals.
+            data_outputs = [data_outputs((n_contents + 1):(2 * n_contents),:); data_outputs(1:n_contents,:)];
+            
+            % 2) build the output Interest signals. no need to swap rows, 
+            % as the order of rows is correct (Interest signals on top)
+            not_cached = ~cached;
+            remaining_interests = diag([not_cached ; zeros(n_contents, 1)]) * inputs;
             
             % update the age of the content items for each we just
             % witnessed cache hits
-            i = (outputs > 0);
+            i = (cached > 0);
             
             % according to LRU policy, reset the age of the cache hit,
             % increase the age of all others by +1
@@ -65,12 +90,12 @@ classdef lru_cache < cache
             % cache (note that the isNotCached() function returns an array
             % encoded as '0' and '1', in which '1' indicates that content c
             % is NOT cached).
-            aux = obj.isNotCached(inputs);
+            not_cached = ~obj.getCached & sum(inputs((obj.content_n + 1):(2 * obj.content_n),:));
 
             % if sum(aux) = r > 0 and the cache is full, we need to make 
             % room for r content items. that means, evicting the 'oldest'
             % r items, and replacing them for the values in aux.
-            r = sum(aux);
+            r = sum(not_cached);
             
             if r > 0
                 
@@ -87,7 +112,7 @@ classdef lru_cache < cache
                     % ok, so now, simply replace the lines of CACHE related to
                     % the new content to be cached with the lines which were
                     % occupided by the evicted contents
-                    obj.CACHE(aux > 0,:) = obj.CACHE(sortIndex(1:r),:);
+                    obj.CACHE(not_cached > 0,:) = obj.CACHE(sortIndex(1:r),:);
 
                     % set the lines of the evicted contents to zeros. this
                     % procedure guarantees cache validity, and the order within
@@ -107,7 +132,7 @@ classdef lru_cache < cache
                         rows(i, frii(i)) = 1;                        
                     end
                     
-                    obj.CACHE(aux > 0,:) = rows(1:r);
+                    obj.CACHE(not_cached > 0,:) = rows(1:r);
                     
                 end
                 

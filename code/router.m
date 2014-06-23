@@ -4,13 +4,16 @@ classdef router < handle
     
     properties
         
-        % an NDN router has a set of network interfaces
-        iface@interface;
+        % an NDN router has a set of I network interfaces
+        ifaces@interface;
         
-        % cache, initialized in the constructor
-        cache@cache;
+        % cache, or CS in NDN terms, whose specific type (e.g. 'LRU', 
+        % 'MRU') is specified via a text argument in the constructor 
+        CS@cache;
         
-        % Pending Interest Table (PIT) abstraction
+        % Pending Interest Table (PIT) abstraction, size C x I (in which C
+        % is the number of different content items we're dealing in the
+        % model)
         PIT@pit;
         
         % Forward Information Base (FIB), simply a C x I matrix which 
@@ -24,20 +27,20 @@ classdef router < handle
 
     methods
         
-        function obj = router(n_ifaces, n_contents, cache_size, cache_type)
+        function obj = router(iface_n, content_n, cache_size, cache_type)
           
             if (nargin == 4)
            
                 % create an NDN cache with size of 'cache_size' slots,
-                % according to cache_type
+                % instatiate a specific class according to cache_type
                 if (strcmpi('LRU', cache_type))
                     
-                    obj.cache = lru_cache(n_contents, cache_size);
+                    obj.CS = lru_cache(content_n, cache_size);
                     
                 else
                     
                     % default is an 'LRU' cache
-                    obj.cache = lru_cache(n_contents, cache_size);
+                    obj.CS = lru_cache(content_n, cache_size);
                     
                 end
 
@@ -46,58 +49,93 @@ classdef router < handle
                 % the index of the iface array is important, as it
                 % identifies a specific iface, encoded in the topology
                 % matrix used to create an NDN network
-                obj.iface(1, n_ifaces) = interface(n_contents);
+                obj.ifaces = interface(content_n, iface_n);
                 
                 % initialize the FIB
-                obj.FIB = zeros(n_contents, n_ifaces);
+                obj.FIB = zeros(content_n, iface_n);
                 
                 % initialize the PIT
-                obj.PIT = pit(n_contents,n_ifaces);
+                obj.PIT = pit(content_n,iface_n);
                 
             end
             
         end
+                
+        % . one assumes the outputs are encoded as a C x I matrix, in which
+        % C equals to the number of contents and I to the number of
+        % interfaces in the present NDN router.
+        function [] = putOut(obj, outputs)
         
-        % put some value in the input port of some interface, indexed by
-        % iface_index
-        function [] = ifacePut(obj, iface_index, value)
-           
-            obj.iface(iface_index).putIn(value);
+            obj.ifaces.putOutPorts(outputs);
             
         end
         
-        % get the values from the output port of the interface indexed by
-        % iface_index
-        function contents = ifaceGet(obj, iface_index)
-           
-            contents = obj.iface(iface_index).getOutport;
+        % . one assumes the outputs are encoded as a C x I matrix, in which
+        % C equals to the number of contents and I to the number of
+        % interfaces in the present NDN router.
+        function [] = getOut(obj)
+        
+            obj.ifaces.getOutPorts;
             
         end
         
-        % forward Interest packets
-        function forwardInterests(obj)
+        % . one assumes the outputs are encoded as a C x I matrix, in which
+        % C equals to the number of contents and I to the number of
+        % interfaces in the present NDN router.
+        function [] = putIn(obj, inputs)
+        
+            obj.ifaces.putInPorts(inputs);
             
-            % check if the content is held by the CS (cache). if it does,
-            % send it back towards the requesting interfaces by placing the
-            % Data in their output ports.
+        end
+        
+        % . one assumes the outputs are encoded as a C x I matrix, in which
+        % C equals to the number of contents and I to the number of
+        % interfaces in the present NDN router.
+        function [] = getIn(obj)
+        
+            obj.ifaces.getInPorts;
+            
+        end
+        
+        % forward Interest packets. the final result shall be the
+        % appropriate activation of Interest and Data signals on the output
+        % ports of all the NDN router's interfaces. note the format of
+        % input and output signals, a (2 x C) x I matrix (where I is equal
+        % to the number of interfaces in the NDN router), with the top 1:C
+        % rows referring to Interest signals, and the bottom 
+        % (C + 1):(2 x C) rows to Data signals ('0' means a deactivated
+        % signal, '1' an activated signal).
+        function [] = forwardInterests(obj, inputs)
+            
+            % check if the content is held by the CS (cache). send the 
+            % content back towards the requesting interfaces by 
+            % activating the appropriate Data signals in their output 
+            % ports.
+            [data_outputs, remaining_interests] = obj.CS.updateOnInterest(inputs);
+            obj.putOut(data_outputs);
             
             % update the PIT, get back the Interests which must still be
             % forwarded upstream
+            remaining_interests = obj.PIT.updateOnInterest(remaining_interests);
             
             % place the output of the last step on the output ports of the 
             % appropriate interfaces (according to the FIB)
+            obj.putOut(remaining_interests);
             
         end
         
         % forward Data packets
-        function forwardData(obj)
+        function [] = forwardData(obj, inputs)
             
             % discard any unsolicited Data packets
+            remaining_data = obj.PIT.updateOnData(inputs);
             
             % send the output from the last step to the output ports of the
             % requesting interfaces (as specified in the PIT)
+            obj.putOut(remaining_data);
             
             % update the CS (cache)
+            obj.CS.updateOnData(remaining_data);
                         
         end
         

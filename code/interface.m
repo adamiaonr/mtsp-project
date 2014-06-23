@@ -14,59 +14,105 @@ classdef interface < handle
     methods
         
         % class constructor
-        function obj = interface(size)
+        function obj = interface(n_contents, n_ifaces)
             
             if (nargin == 1)
             
-                % initialize interface's buffer to zeros
-                obj.inport = zeros(1,size);
-                obj.outport = zeros(1,size);
+                % initialize interface's buffer to zeros. note that the
+                % row size must be set to 2 x C, due to both Interest and
+                % Data signals, which can both be present in output and
+                % input ports.
+                obj.inport = zeros(2 * n_contents, n_ifaces);
+                obj.outport = zeros(2 * n_contents, n_ifaces);
 
             end
         end
                 
         % add the contents in 'input' to the input port of the interface
-        function obj = putIn(obj,input)
+        function obj = putInPorts(obj, inputs)
         
-            obj.inport = put(obj.inport,input);
+            obj.inport = put(obj.inport, inputs);
             
         end
-
-        % add the contents in 'output' to the output port of the interface
-        function obj = putOut(obj,output)
         
-            obj.outport = put(obj.outport,output);
+        % add the contents in 'output' to the output port of the interface
+        function obj = putInPort(obj, input, iface)
+        
+            obj.inport(:, iface) = put(obj.inport(:, iface), input);
             
         end
         
         % simply return the contents of the interface's input port
-        function contents = getInport(obj)
+        function contents = getInPorts(obj)
         
             contents = obj.inport;
             
         end
+        
+        % simply return the contents of the interface's input port
+        function contents = getInPort(obj, iface)
+        
+            contents = obj.inport(:, iface);
+            
+        end
+        
+        % add the contents in 'output' to the output port of the interface
+        function obj = putOutPorts(obj, outputs)
+        
+            obj.outport = put(obj.outport, outputs);
+            
+        end
+
+        % add the contents in 'output' to the output port of the interface
+        function obj = putOutPort(obj, output, iface)
+        
+            obj.outport(:, iface) = put(obj.outport(:, iface), output);
+            
+        end
 
         % simply return the contents of the interface's output port
-        function contents = getOutport(obj)
+        function contents = getOutPorts(obj)
         
             contents = obj.outport;
             
         end
-
+        
+        % simply return the contents of the interface's output port
+        function contents = getOutPort(obj, iface)
+        
+            contents = obj.outport(:, iface);
+            
+        end
         
         % clear the interface's input port
-        function obj = clearInport(obj)
+        function obj = clearInPorts(obj)
            
             % as simple as making it all 0
-            obj.inport = obj.inport .* 0;
+            obj.inport = obj.inport & 0;
+            
+        end
+        
+        % clear the interface's input port
+        function obj = clearInPort(obj, iface)
+           
+            % as simple as making it all 0
+            obj.inport(:, iface) = obj.inport(:, iface) & 0;
             
         end
         
         % clear the interface's buffer contents
-        function obj = clearOutport(obj)
+        function obj = clearOutPorts(obj)
            
             % as simple as making it all 0
-            obj.outport = obj.outport .* 0;
+            obj.outport = obj.outport & 0;
+            
+        end
+        
+        % clear the interface's buffer contents
+        function obj = clearOutPort(obj, iface)
+           
+            % as simple as making it all 0
+            obj.outport(:, iface) = obj.outport(:, iface) & 0;
             
         end
         
@@ -78,13 +124,13 @@ end
 % http://www.mathworks.com/help/matlab/matlab_oop/specifying-methods-and-functions.html
 
 % add the contents in 'input' to some interface's port
-function port = put(port,input)
+function port = put(port, input)
 
     % ALWAYS check if dimensions of input and buffer match
     try
         % instead of completely altering the contents of the
-        % interface's buffer, add the contents of 'input' to it
-        port = port + input;
+        % interface's buffer, OR the contents of 'input' to it
+        port = port | input;
 
     catch err
 
@@ -102,11 +148,5 @@ function port = put(port,input)
         end
 
     end  % end try/catch
-
-    % normalize the buffer (-1 0 1 encoding is used)
-    %port = (port ~= 0);
-    i = (port ~= 0);
-    port(i) = port(i) .* (1 ./ abs(port(i)));
-
 end
     

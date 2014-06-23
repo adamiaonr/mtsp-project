@@ -23,23 +23,23 @@ classdef (Abstract) cache < handle
         
         % some auxiliary properties
         size = 0;
-        content_size = 0;
+        content_n = 0;
         
     end
 
     methods
         
         % class constructor
-        function obj = cache(content_n,size)
+        function obj = cache(content_n, size)
             
             if (nargin == 2)
             
                 % initialize cache contents to zeros
-                obj.CACHE = zeros(content_n,size);
+                obj.CACHE = zeros(content_n, size);
                 
                 % auxiliary properties
                 obj.size = size;
-                obj.content_size = content_n;
+                obj.content_n = content_n;
                 
             end
         end
@@ -66,6 +66,15 @@ classdef (Abstract) cache < handle
                         
         end
         
+        % returns a C x 1 array withe the content items which are cached
+        % (rows set to '1') and those which are not cached (rows set to
+        % '0')
+        function contents = getCached(obj)
+            
+            contents = sum(obj.CACHE, 2) & 1;
+            
+        end
+                
         % evaluates which of the contents set to '1' in inputs are cached 
         % in the
         % router's CS. for each row set to '1', it means the element is
