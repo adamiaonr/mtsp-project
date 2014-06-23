@@ -77,28 +77,15 @@ classdef router < handle
         % forward Interest packets
         function forwardInterests(obj)
             
-            % check if the content is held by the CS (cache). if it does,
-            % send it back towards the requesting interfaces by placing the
-            % Data in their output ports.
-            
-            % update the PIT, get back the Interests which must still be
-            % forwarded upstream
-            
-            % place the output of the last step on the output ports of the 
-            % appropriate interfaces (according to the FIB)
+            % check if 
             
         end
         
         % forward Data packets
         function forwardData(obj)
             
-            % discard any unsolicited Data packets
             
-            % send the output from the last step to the output ports of the
-            % requesting interfaces (as specified in the PIT)
             
-            % update the CS (cache)
-                        
         end
         
     end

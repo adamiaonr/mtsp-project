@@ -66,37 +66,26 @@ classdef (Abstract) cache < handle
                         
         end
         
-        % evaluates which of the contents set to '1' in inputs are cached 
-        % in the
-        % router's CS. for each row set to '1', it means the element is
-        % cached in the CS.
+        % evaluates which of the contents in inputs are cached in the
+        % router's CS
         function contents = isCached(obj, inputs)
 
-            % assuming that the cache is valid and follows propper
-            % encoding, then it's as simple as this...
+            % assuming that 
             contents = sum(obj.CACHE, 2) & inputs;
             
         end
         
-        % evaluates which of the contents set to '1' in inputs are NOT 
-        % cached in the
-        % router's CS. for each row set to '1', it means the element is
-        % NOT cached in the CS.
         function contents = isNotCached(obj, inputs)
         
-            contents = ~sum(obj.CACHE, 2) & inputs;
+            
             
         end
 
-        % returns the column indexes of free slots in the cache
         function columns = getFreeSlots(obj)
 
-            % once again, assuming proper encoding, it's as simple as
-            % this...
-            columns = ~sum(obj.CACHE);
+            
             
         end
-        
     end
 
     methods (Abstract)

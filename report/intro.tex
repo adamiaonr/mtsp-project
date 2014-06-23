@@ -1,21 +1,44 @@
 \section{Introduction}
 \label{sec:intro}
 
-Semi-supervised learning (SSL) is a branch of machine learning that makes use of 
-unlabeled data in an attempt to improve the performance of purely supervised 
-learning methods in cases where labeled data is `hard to get' and scarce, when compared to 
-unlabeled data~\cite{chapelle2010semi,zhu05survey,zhu2009introduction}. Such scenarios are 
-rather frequent, e.g. in application areas such as text classification, image 
-recognition, web content analysis. Here we focus on 
-the study of specific semi-supervised classification tasks, even though other 
-sub-fields such as semi-supervised regression~\cite{chapelle2010semi} 
-exist.\vertbreak
+Departing from its initial model as a network for host-to-host communications, 
+the Internet started shifting towards a content-centric model with the advent of 
+the World Wide Web in the 1980s. This model persisted, 
+and with increasingly demanding usage requirements, leading to the 
+development of technologies such as 
+Content Delivery Networks (CDNs) and Peer-to-Peer (P2P) 
+networks~\cite{Passarella20121}. These were built around the architecture's 
+edge, due to the so-called 
+`ossification'~\cite{Handley:2006:WIO:1188052.1188101} of the Internet's core, 
+leading to inefficiencies in terms of latency, bandwidth usage, among others. 
+Given the widespread adoption of the content-centric model, 
+researchers to think about new and clean-slate designs 
+for the Internet's core, in order for it to natively cope with these issues. Among 
+such efforts~\cite{5936152}, the research field of Information Centric Networking 
+(ICN)~\cite{Xylomenos2013} emerged, 
+advocating the deliberate abolition of network locators, replacing of IP 
+addresses with content identifiers and calling for the widespread use of 
+in-network caching, so that content can be easily served from multiple 
+anywhere in the network~\cite{Koponen2007,Jacobson2009,Trossen2012,
+Raychaudhuri2012,Han2012,Dannewitz:2013:NII:2459510.2459643}. Here we focus on the aspect of 
+in-network caching in one of such clean slate designs, 
+the Named Data Networking (NDN) architecture~\cite{Jacobson2009}.\shortvertbreak
 
-The work presented in this paper explores the field of semi-supervised learning, 
-applied to a particular problem: text classification. We start by exploring 
-a generative model for text classification --- Multinomial Naive Bayes (MNB)~\cite{McCallum98acomparison} --- still 
-in its fully-supervised form. Based on that model, we then advance to a 
-semi-supervised setting by combining it with the Expected Maximization (EM)~\cite{Nigam2000} 
-algorithm, studying some techniques to augment it. We finally present results 
-from our own and third-party implementations of such models, over the 
-well-known 20 Newsgroups dataset~\cite{Lang95}.
+In this paper, we focus on the analysis of cache behavior in NDN 
+networks under different caching policies, network topologies and content 
+usage characteristics. To do so, we specify a simple and but modular NDN router 
+model, loosely inspired in nonlinear dynamical 
+systems~\cite{Hedrick2010}. We implement the specified model in MATLAB, providing 
+some simulation results with X simple caching policies, specifically (...).\shortvertbreak
+
+The remainder of this paper is organized as follows. In Section~\ref{sec:ndn} we provide an 
+overview over the NDN architecture, focusing on the basic operation of its 
+forwarding engine and the way it involves in-network caching. In 
+Section~\ref{sec:methodology}, we present the overall methodology followed 
+during this work, including an explanation of the considered NDN router models, 
+caching policies and network topologies, while in 
+Section~\ref{sec:impl} we show details about the implementation of 
+such models in MATLAB. In Section~\ref{sec:experiments} we present a set of 
+experiments ran over our model implementation, as well as the respective 
+results. Finally, in Section~\ref{sec:conclusions} we draw some pertinent 
+conclusions from the presented work.

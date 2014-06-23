@@ -26,23 +26,37 @@ classdef pit < handle
         end
         
         % add an entry to the PIT
-        function obj = add(obj, entry, iface)
-                                
+        function obj = add2PIT(obj, entry, iface)
+            
+            % this pair of operations may not be entirely correct, so
+            % discard it for now and stick to a basic PIT operation
+            %i = (obj.PIT(:,iface) < 0);
+            %obj.PIT(i,iface) = obj.PIT(i,iface) + entry(i);
+        
+            % check which values from entry correspond to Interest packets
+            % (encoded as '1')
+            i = (entry > 0);
+            
             % simply OR the entry Interest values to the corresponding
             % column on the PIT
-            obj.PIT(:, iface) = obj.PIT(:, iface) | entry;
-                        
+            obj.PIT(i, iface) = obj.PIT(i, iface) + entry(i);
+            
+            % make sure it is encoded as 1 and 0 (avoid the values eq. to
+            % 0 due to inf problems)
+            i = (obj.PIT(:, iface) ~= 0);
+            obj.PIT(i, iface) = obj.PIT(i, iface) .* (1 ./ obj.PIT(i, iface));
+            
         end
         
         % clear PIT contents by interface
-        function [] = clearIface(obj, iface)
+        function [] = clearPITiface(obj, iface)
         
             obj.PIT(:, iface) = obj.PIT(:, iface) .* 0;
             
         end
         
         % clear PIT contents by content
-        function [] = clearContent(obj, content)
+        function [] = clearPITcontent(obj, content)
         
             obj.PIT(content,:) = obj.PIT(content,:) .* 0;
             
