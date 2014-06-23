@@ -54,6 +54,11 @@ classdef router < handle
                 % initialize the FIB
                 obj.FIB = zeros(content_n, iface_n);
                 
+                % TODO: BY DEFAULT, ALL FORWARDING OPERATIONS GO OUT 
+                % INTERFACE 1 (THIS MUST BE CHANGED IN THE FUTURE FOR 
+                % GENERALITY 
+                obj.FIB(:,1) = ones(content_n, 1);
+                
                 % initialize the PIT
                 obj.PIT = pit(content_n,iface_n);
                 
@@ -120,7 +125,7 @@ classdef router < handle
             
             % place the output of the last step on the output ports of the 
             % appropriate interfaces (according to the FIB)
-            obj.putOut(remaining_interests);
+            obj.putOut((obj.FIB * (diag(sum(remaining_interests, 2)) & 1)));
             
         end
         
