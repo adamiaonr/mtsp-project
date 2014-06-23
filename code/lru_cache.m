@@ -90,7 +90,7 @@ classdef lru_cache < cache
             % cache (note that the isNotCached() function returns an array
             % encoded as '0' and '1', in which '1' indicates that content c
             % is NOT cached).
-            not_cached = ~obj.getCached & sum(inputs((obj.content_n + 1):(2 * obj.content_n),:));
+            not_cached = ~obj.getCached & sum(inputs((obj.content_n + 1):(2 * obj.content_n),:), 2);
 
             % if sum(aux) = r > 0 and the cache is full, we need to make 
             % room for r content items. that means, evicting the 'oldest'
@@ -132,7 +132,7 @@ classdef lru_cache < cache
                         rows(i, frii(i)) = 1;                        
                     end
                     
-                    obj.CACHE(not_cached > 0,:) = rows(1:r);
+                    obj.CACHE((not_cached > 0),:) = rows(1:r,:);
                     
                 end
                 

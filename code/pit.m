@@ -88,7 +88,7 @@ classdef pit < handle
             % on position (c,i) in the PIT means that an
             % Interest for content at row c has been received at interface 
             % i and awaiting a corresponding Data object.            
-            obj.PIT = (obj.PIT | inputs(1:obj.content_n,:));
+            obj.PIT = ((obj.PIT | inputs(1:obj.content_n,:)) .* 1);
                         
         end
         
@@ -100,12 +100,16 @@ classdef pit < handle
         function remaining_data = updateOnData(obj, inputs)
         
             % basically, discard all the row values for which there is no
-            % outstanding PIT entry
-            remaining_data = diag([zeros(obj.content_n, 1); (sum(obj.PIT, 2) & 1)]) * inputs;
+            % outstanding PIT entry            
+            data_inputs = (sum(inputs, 2) & 1);
+            remaining_data = diag(data_inputs((obj.content_n + 1):(2 * obj.content_n)));
+            remaining_data = (remaining_data * (obj.PIT .* 1));
+            remaining_data = [zeros(obj.content_n, obj.iface_n); remaining_data];
             
             % now, free the positions in the PIT (since the awaiting Data
             % packets are about to be forwarded downstream)
-            obj.PIT = (obj.PIT & ~inputs(1:obj.content_n,:));
+            %obj.PIT = (obj.PIT & ~inputs(1:obj.content_n,:));
+            obj.PIT = diag(~data_inputs((obj.content_n + 1):(2 * obj.content_n))) * (obj.PIT .* 1);
             
         end
 
