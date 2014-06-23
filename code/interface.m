@@ -16,7 +16,7 @@ classdef interface < handle
         % class constructor
         function obj = interface(n_contents, n_ifaces)
             
-            if (nargin == 1)
+            if (nargin == 2)
             
                 % initialize interface's buffer to zeros. note that the
                 % row size must be set to 2 x C, due to both Interest and

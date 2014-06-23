@@ -23,6 +23,11 @@ classdef router < handle
         % follow
         FIB = []
         
+        % dimensions, number of contents (rows) and num of 
+        % interfaces (columns)
+        content_n = 0;
+        iface_n = 0;
+        
     end
 
     methods
@@ -30,6 +35,9 @@ classdef router < handle
         function obj = router(iface_n, content_n, cache_size, cache_type)
           
             if (nargin == 4)
+                
+                obj.content_n = content_n;
+                obj.iface_n = iface_n;
            
                 % create an NDN cache with size of 'cache_size' slots,
                 % instatiate a specific class according to cache_type
@@ -78,9 +86,9 @@ classdef router < handle
         % . one assumes the outputs are encoded as a C x I matrix, in which
         % C equals to the number of contents and I to the number of
         % interfaces in the present NDN router.
-        function [] = getOut(obj)
+        function contents = getOut(obj)
         
-            obj.ifaces.getOutPorts;
+            contents = obj.ifaces.getOutPorts;
             
         end
         
@@ -96,9 +104,9 @@ classdef router < handle
         % . one assumes the outputs are encoded as a C x I matrix, in which
         % C equals to the number of contents and I to the number of
         % interfaces in the present NDN router.
-        function [] = getIn(obj)
+        function contents = getIn(obj)
         
-            obj.ifaces.getInPorts;
+            contents = obj.ifaces.getInPorts;
             
         end
         
@@ -110,7 +118,9 @@ classdef router < handle
         % rows referring to Interest signals, and the bottom 
         % (C + 1):(2 x C) rows to Data signals ('0' means a deactivated
         % signal, '1' an activated signal).
-        function [] = forwardInterests(obj, inputs)
+        function [] = forwardInterests(obj)
+            
+            inputs = obj.getIn;
             
             % check if the content is held by the CS (cache). send the 
             % content back towards the requesting interfaces by 
@@ -125,12 +135,17 @@ classdef router < handle
             
             % place the output of the last step on the output ports of the 
             % appropriate interfaces (according to the FIB)
-            obj.putOut((obj.FIB * (diag(sum(remaining_interests, 2)) & 1)));
+            to_forward = sum(remaining_interests, 2) & 1;
+            to_forward = diag(to_forward(1:obj.content_n));
+            to_forward = to_forward * obj.FIB;
+            obj.putOut([to_forward; zeros(obj.content_n, obj.iface_n)]);
             
         end
         
         % forward Data packets
-        function [] = forwardData(obj, inputs)
+        function [] = forwardData(obj)
+            
+            inputs = obj.getIn;
             
             % discard any unsolicited Data packets
             remaining_data = obj.PIT.updateOnData(inputs);

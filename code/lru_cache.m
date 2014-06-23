@@ -15,7 +15,7 @@ classdef lru_cache < cache
     methods
         
         % class constructor
-        function obj = cache(content_n, size)
+        function obj = lru_cache(content_n, size)
             
             if (nargin == 2)
             
@@ -55,16 +55,16 @@ classdef lru_cache < cache
             % 1:C (i.e. only Interest signals). the diag() statement allows
             % a direct matrix multiplication which 'erases' (i.e. sets to
             % [0 0 ... 0]) the appropriate rows in inputs.
-            data_outputs = diag([cached ; zeros(n_contents, 1)]) * inputs;
+            data_outputs = diag([cached ; zeros(obj.content_n, 1)]) * inputs;
                         
             % 1.3) swap the rows from outputs, as the top C rows correspond
             % to Interest signals, while the bottom C rows to Data signals.
-            data_outputs = [data_outputs((n_contents + 1):(2 * n_contents),:); data_outputs(1:n_contents,:)];
+            data_outputs = [data_outputs((obj.content_n + 1):(2 * obj.content_n),:); data_outputs(1:obj.content_n,:)];
             
             % 2) build the output Interest signals. no need to swap rows, 
             % as the order of rows is correct (Interest signals on top)
             not_cached = ~cached;
-            remaining_interests = diag([not_cached ; zeros(n_contents, 1)]) * inputs;
+            remaining_interests = diag([not_cached ; zeros(obj.content_n, 1)]) * inputs;
             
             % update the age of the content items for each we just
             % witnessed cache hits

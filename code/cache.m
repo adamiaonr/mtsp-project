@@ -1,4 +1,4 @@
-classdef (Abstract) cache < handle
+classdef cache < handle
     %CACHE Abstraction of an NDN cache.
     %   This abstract class provides the common properties and methods for 
     %   NDN cache (aka Content Store, CS) abstractions, 
@@ -26,23 +26,33 @@ classdef (Abstract) cache < handle
         content_n = 0;
         
     end
+    
+    methods (Abstract)
+        
+        % update cache state upon Interest inputs
+        [data_outputs, remaining_interests] = updateOnInterest(obj, inputs);
+        
+        % update cache state upon Data inputs
+        [] = updateOnData(obj, inputs);
+        
+    end
 
     methods
         
-        % class constructor
-        function obj = cache(content_n, size)
-            
-            if (nargin == 2)
-            
-                % initialize cache contents to zeros
-                obj.CACHE = zeros(content_n, size);
-                
-                % auxiliary properties
-                obj.size = size;
-                obj.content_n = content_n;
-                
-            end
-        end
+%         % class constructor
+%         function obj = cache(content_n, size)
+%             
+%             if (nargin == 2)
+%             
+%                 % initialize cache contents to zeros
+%                 obj.CACHE = zeros(content_n, size);
+%                 
+%                 % auxiliary properties
+%                 obj.size = size;
+%                 obj.content_n = content_n;
+%                 
+%             end
+%         end
         
         % checks cache validity
         function result = checkValidity(obj)
@@ -105,16 +115,6 @@ classdef (Abstract) cache < handle
             columns = ~sum(obj.CACHE);
             
         end
-        
-    end
-
-    methods (Abstract)
-        
-        % update cache state upon Interest inputs
-        outputs = udpateOnInterest(obj, inputs)
-        
-        % update cache state upon Data inputs
-        outputs = udpateOnData(obj, inputs)        
         
     end
     
