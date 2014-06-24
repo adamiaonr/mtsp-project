@@ -1,6 +1,259 @@
 \section{Methodology}
 \label{sec:methodology}
 
-\subsection{Heading 1}
-\label{subsec:heading-1-met}
+We now present a brief description of the NDN model (...) for this work. We 
+start (...).
 
+\subsection{Overview}
+\label{subsec:meth-overview}
+
+We consider a conceptual NDN network composed by three main types of 
+entities: (1) 
+$|R|$ NDN routers\footnote{Here we use the notation $|E|$ to 
+represent the number of elements of type $E$.} $R_n$, $n = \{1,2,...,|R|\}$, 
+organized in some type of topology (e.g. cascade, tree, etc.); (2) a set of 
+$|C|$ clients $C_j$, $j = \{1,2,...,|C|\}$; and a single 
+content server $S$, holding $|O|$ different content objects $O_k$, 
+$k = \{1,2,...,|O|\}$ (e.g. $|O|$ different photos).\shortvertbreak
+
+Clients issue requests for content objects $O_k$, i.e. Interest packets $i_{O_k}$, which 
+are propagated through NDN routers towards the content server $S$, and 
+eventually followed by Data packets 
+$d_{O_k}$, containing the requested content object. We represent the 
+elementary set of signals fed to\slash read from the inputs\slash outputs of the 
+aforementioned basic 
+entities, at some discrete time instant $t$, as a $2\,|O| \times 1 $ array in the form
+
+\begin{equation}
+    u[t] = \begin{bmatrix}  i_{O_1}         \\ 
+                            i_{O_2}         \\ 
+                             ...            \\ 
+                            i_{O_{|O|}}     \\ 
+                                            \\ 
+                            d_{O_1}         \\ 
+                            d_{O_2}         \\ 
+                             ...            \\ 
+                            d_{O_{|O|}}     \\ \end{bmatrix}
+    \label{eq:signal}
+\end{equation}\shortvertbreak
+
+Each component $i_{O_k}$ or $d_{O_k}$ may assume an integer value, i.e. $i_{O_k}, d_{O_k} \in \mathbb{N}_0 = \{0, 1, 2, ... \}$, 
+representing the absence (in case of $i_{O_k}, d_{O_k} = 0$) or presence (in case of $i_{O_k}, d_{O_k} > 0$) of an 
+Interest\slash Data packet, at a given time instant $t$. E.g. considering a setting 
+with $|O| = 2$ content objects, a value of $u$ corresponding to the presence 
+of two Interests for content $O_1$ and one Data packet for $O_2$ (with the absence 
+for the remaining components) would be encoded as
+
+\begin{equation}
+    u[t] = \begin{bmatrix}     2   \\ 
+                                        0   \\ 
+                                        0   \\ 
+                                        1   \\ \end{bmatrix}
+    \label{eq:signal-eg}
+\end{equation}\shortvertbreak
+
+With this 
+representation of $u$, we capture situations in which a network 
+entity may simultaneously receive\slash issue any Interest or Data packet as 
+its input\slash output.
+
+\subsection{NDN Router Model}
+\label{subsec:meth-overview}
+
+An NDN router is the most important entity of our model, acting 
+as the main agent of NDN's forwarding engine. It is also the more complex entity, 
+including a set of submodules, 
+described in Section~\ref{sec:ndn}: (1) the Forward Information Base (FIB); (2) 
+the Pending Interest Table (PIT); and (3) the Content Store (CS). We first 
+provide an overview of our NDN router module, and then proceed with the description 
+of each one of its submodules.\shortvertbreak
+
+\begin{figure}[h!]
+
+    \centering
+    \includegraphics[width=0.35\textwidth]{figures/ndn-forwarding-engine.png}
+    \cprotect\caption{Graphical depiction of our NDN router model.}
+    \label{fig:ndn-router-overview}
+
+\end{figure}
+
+Figure~\ref{fig:ndn-router-overview} provides a graphical description of our 
+router model. A router $R$ contains a set of $|F|$ interfaces $F$, used to interconnect 
+it to other entities (e.g. some other router $R'$, a client $C$ or the server 
+$S$). Each interface can subsequently be divided into one input and one output 
+port, which `cross-connect' with the ports of the attached 
+interfaces (see Figure~\ref{fig:ndn-router-overview}). We use the notation 
+$F_{n,m,in}$ or $F_{n,m,out}$, to refer to the 
+input\slash output ports of an interface $m$, of a router $R_n$.\shortvertbreak
+
+The act of forwarding some set of Interest\slash Data packets from a router $R_1$, 
+over some interface $F_1$, is modeled by having $R_1$ fill $F_{1,1,out}$ with 
+some set of signals $u$, following the encoding shown in 
+Section~\ref{subsec:meth-overview}. Conversely, the act of receiving some set 
+of Interest\slash Data packets is modeled by having routers $R_2$ and $R_3$ --- 
+connected with $F_{1,1}$ via $F_{2,1}$ and $F_{3,1}$ --- fill $F_{2,1,in}$ and $F_{3,1,in}$ 
+with $u$ \footnote{In fact, this procedure can be extended to any network entity, let 
+it be a router, a client or the server.}. As seen in Figure~\ref{fig:ndn-router-overview}, 
+more than one entity may be connected to some interface, in which case the 
+signals $u$ originating from the interconnected interfaces' output ports, 
+e.g. $F_{2,1,out}$ and $F_{3,1,out}$, are combined and summed at the other 
+end's input port, e.g. $F_{1,1,in}$. While the use of interfaces and 
+input\slash output ports may be seen as a case of over engineering, we argue 
+it makes our model robust, highly modular and capable of supporting multiple 
+network topologies.\shortvertbreak
+
+\subsubsection{Pending Interest Table (PIT)}
+\label{subsec:meth-pit}
+
+In the same way that the FIB commands the forwarding of Interests, the PIT 
+commands the forwarding of Data packets. Nevertheless, the composition of the 
+PIT is more dynamic than that of the FIB, being dependent on the flow of 
+Interest and Data packets through the NDN router.\shortvertbreak
+
+Similarly to the FIB, we model the PIT as a $|O| \times |F|$ matrix in the 
+form
+
+\begin{equation}
+\text{PIT} = \begin{bmatrix} 1 & 0 & 0 & 0  \\ 
+                1 & 0 & 0 & 0               \\ 
+                0 & 1 & 0 & 0               \\ 
+                0 & 1 & 0 & 0               \\ \end{bmatrix}
+    \label{eq:pit}
+\end{equation}\shortvertbreak
+
+PIT entries 
+$(O_k,F_m)$ are encoded as 0 or 1: if $(O_k,F_m) = 1$, Data packets of 
+type $O_k$ have been previously requested via interface $F_m$, meaning that Data 
+packets $d_{O_k}$ shall be forwarded via $F_m$; on the other hand, 
+if $(O_k,F_m) = 0$, $d_{O_k}$ should not be forwarded via that 
+interface. These operations influence the composition of the PIT over time, whose 
+maintenance can be summarized by the two simple routines shown below, to be 
+followed upon Interest and Data packet arrivals, respectively. For the algorithms shown 
+below, we consider a special matrix $J$, corresponding to the concatenation of 
+all the arrays $u_{n,m,in}$ as columns, i.e. the contents from the input ports 
+of all the interfaces $F_m$, at some router $R_n$:
+
+\begin{equation}
+J = \begin{bmatrix} u_{n,1,in} & u_{n,2,in} & ... & u_{n,|F|,in} \end{bmatrix}
+    \label{eq:j}
+\end{equation}\shortvertbreak
+
+\begin{algorithmic}[1]
+
+\State define updateOnInterest($J$):
+\State
+    \State $J' \leftarrow J(1:|O|,:)$
+    \State $D \leftarrow$ diag$(\neg(\text{PIT} \times \textbf{1}))$
+    \State $T \leftarrow D \times J'$ 
+    \State PIT $\leftarrow$ PIT $|$ $J'$ 
+    \State \Return $T$
+
+\end{algorithmic}\shortvertbreak
+
+Upon the reception of Interest signals, i.e. $J'$ (the first $|O|$ rows 
+of $J$), we first identify the content items $O_k$, or the rows indexes of the 
+PIT, for which there are \textbf{no} pending Interests, in line 4. For 
+convenience, we often recur to binary operations (negation `$\neg$', 
+conjunction `$\&$', disjunction `$|$') over matrices: e.g. in line 4, after 
+summing all columns of the PIT\footnote{We use the notation \textbf{1} for the 
+sum vector, i.e. $\textbf{1} = [1\,1\,...\,1]^{T}$.}, we negate the 
+result, obtaining a binary encoded $|O| \times 1$ 
+column vector which indicates the absence (encoded as  `1') and presence 
+(encoded as `0') of pending Interests for some content object $O_k$. We diagonalize 
+the result, so that it is appropriate for multiplication with $J'$. In line 5, 
+we 
+keep the rows of $J'$ with such indexes, `erasing' the remaining rows (i.e. 
+setting their elements to 0). These are saved in $T$, which consist in the only 
+Interest signals that the NDN router needs to forward upstream. Note that even 
+if $J'$ includes some $i_{O_k} > 1$, we only need to forward one Interest 
+over the interfaces specified in the FIB, and so the binary encoding of $T$, 
+resulting from the use of binary operations, neatly serves our purposes. 
+In line 6, the 
+contents of the PIT are updated by performing a logic OR `$|$' with $J'$, so 
+that it registers all the newly received 
+Interest signals and their correspondence to interfaces. This last step is important, 
+as it allows future Data packets to be forwarded downstream over the requesting 
+interfaces.\shortvertbreak
+
+\begin{algorithmic}[1]
+
+\State define updateOnData($J$):
+\State
+    \State $J' \leftarrow J(|O|+1:2\,|O|,:)$
+    \State $D \leftarrow J' \times \textbf{1}$
+    \State $T \leftarrow$ diag$(D) \times$ PIT
+    \State PIT $\leftarrow$ diag$(\neg\,D) \times$ PIT
+    \State \Return $T$
+
+\end{algorithmic}\shortvertbreak
+
+With the explanation given above for the \textbf{updateOnInterest()} routine, 
+the understanding of \textbf{updateOnData()} is left to the reader. Note that 
+the objective of this last routine is the reverse operation, i.e. forwarding Data 
+packets over the interfaces for which there is a registered Interest in the PIT. We 
+also note that the final step of the operation (line 6) consists in erasing 
+all Interest registrations which have been successfully attended.\shortvertbreak
+
+\subsubsection{Forwarding Information Base (FIB)}
+\label{subsec:meth-fib}
+
+The FIB is important for the act of forwarding Interest packets towards 
+appropriate content sources, by indicating the interfaces $F$ over which such 
+sources are reachable. For each NDN router $R$, we model the FIB as a simple 
+$|O| \times |F|$ matrix in the form
+
+\begin{equation}
+\text{FIB} = \begin{bmatrix} 1 & 0 & 0 & 0  \\ 
+                1 & 0 & 0 & 0               \\ 
+                0 & 1 & 0 & 0               \\ 
+                0 & 1 & 0 & 0               \\ \end{bmatrix}
+    \label{eq:fib}
+\end{equation}\shortvertbreak
+
+The FIB encoding shown in~\ref{eq:fib} would be held by router $R_1$ in the 
+simple topology shown in Figure~\ref{fig:fib-topo}. FIB entries 
+$(O_k,F_m)$ are encoded as 0 or 1: if $(O_k,F_m) = 1$, content objects of 
+type $O_k$ are accessible via interface $F_m$, meaning that Interests 
+$i_{O_k}$ shall be forwarded via $F_m$; on the other hand, 
+if $(O_k,F_m) = 0$, $i_{O_k}$ should not be forwarded via that interface. 
+Following the same type of operations described for the PIT 
+in Section~\ref{subsec:meth-pit}, we now present the algorithm followed by NDN 
+routers to forward the Interest signals, $T$, returned by the 
+\textbf{updateOnInterest()} operation:\shortvertbreak 
+
+\begin{algorithmic}[1]
+
+\State define forwardData($T$):
+\State
+    \State $T' \leftarrow T \times \textbf{1}$
+    \State $L \leftarrow$ diag$(T') \times$ FIB
+    \State $F_{n,m,out} \leftarrow L$
+
+\end{algorithmic}\shortvertbreak
+
+In our model, the composition of the FIB is established at an initial phase, 
+not suffering any further alterations (more details in 
+Section~\ref{subsec:meth-conn-dots}). Note 
+that the FIB only commands Interest forwarding actions, not participating in the 
+forwarding of Data packets.\shortvertbreak
+
+\begin{figure}[h!]
+
+    \centering
+    \includegraphics[width=0.35\textwidth]{figures/ndn-forwarding-engine.png}
+    \cprotect\caption{Simple example of an NDN network topology.}
+    \label{fig:fib-topo}
+
+\end{figure}
+
+\subsubsection{Content Store (CS)}
+\label{subsec:meth-cs}
+
+\subsection{Endpoints}
+\label{subsec:meth-endpoints}
+
+\subsection{Caching Algorithms}
+\label{subsec:meth-caching-algs}
+
+\subsection{Connecting the Dots}
+\label{subsec:meth-conn-dots}

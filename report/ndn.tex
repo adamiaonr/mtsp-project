@@ -16,6 +16,16 @@ are originally released into the network by clients willing to access a
 particular content, addressing it via its content name, while Data packets 
 carry the content itself.\shortvertbreak
 
+\begin{figure}[h!]
+
+    \centering
+    \includegraphics[width=0.35\textwidth]{figures/ndn-forwarding-engine.png}
+    \cprotect\caption{Interest and Data packet processing according to NDN's 
+        forwarding engine~\cite{Yi2012}.}
+    \label{fig:ccn-icn-ndn-forwarding-engine}
+
+\end{figure}
+
 An NDN router is conceptually composed by three main elements: (1) a 
 Forward Information 
 Base (FIB), (2) a Pending Interest Table (PIT) and (3) a Content Store 
@@ -44,16 +54,6 @@ Base (FIB), (2) a Pending Interest Table (PIT) and (3) a Content Store
 
 \end{itemize}
 
-\begin{figure}[h!]
-
-    \centering
-    \includegraphics[width=0.35\textwidth]{figures/ndn-forwarding-engine.png}
-    \cprotect\caption{Interest and Data packet processing according to NDN's 
-        forwarding engine~\cite{Yi2012}.}
-    \label{fig:ccn-icn-ndn-forwarding-engine}
-
-\end{figure}
-
 In NDN, communication is receiver-driven, i.e. having the desire to fetch 
 a particular content, a client releases an Interest packet into the network 
 so that it is forwarded towards an appropriate content holder. In 
@@ -73,7 +73,7 @@ the textual description provided below:
             \item If there's a match in the router's CS, a copy of the respective 
                 CS entry will be sent back via \verb+iface0+, the Interest 
                 packet is dropped. Depending on the pre-specified 
-                caching policy (e.g. MRU, LRU, LFU~\footnote{\url{http://en.wikipedia.org/wiki/Cache_algorithms}.}, 
+                caching policy (e.g. MRU, LRU, LFU~\footnote{\url{http://en.wikipedia.org/wiki/Cache_algorithms}}, 
                 etc.), the organization of the CS 
                 may change at this point. \textbf{End.}
 
