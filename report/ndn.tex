@@ -94,7 +94,8 @@ the textual description provided below:
 
 \end{enumerate}
 
-Note that in NDN only Interest packets are forwarded: intermediate NDN 
+Note that in NDN only Interest packets are forwarded according to the FIB: 
+intermediate NDN 
 routers (i.e. between client and content holder) forward the 
 Interests and have their respective PIT tables updated with Interest-to-interface 
 mappings, pre-establishing a reverse path for Data packets to follow as soon as a 
