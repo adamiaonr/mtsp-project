@@ -108,7 +108,7 @@ classdef pit < handle
             %remaining_data = [zeros(obj.content_n, obj.ifaces_n); remaining_data];
             
             data_inputs = inputs((obj.content_n + 1):(2 * obj.content_n), :) & 1;
-            remaining_data = data_inputs & (sum(obj.PIT, 2) * ones(1, obj.ifaces_n));
+            remaining_data = obj.PIT & ((sum(data_inputs, 2) & 1) * ones(1, obj.ifaces_n));
             remaining_data = [zeros(obj.content_n, obj.ifaces_n); remaining_data];
                         
             % now, free the positions in the PIT (since the awaiting Data

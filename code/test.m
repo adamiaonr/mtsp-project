@@ -5,14 +5,14 @@
 % 1) overall simulation parameters
 
 % 1.1) different number of content objects
-content_n = 1000;
+content_n = 5;
 
 % 1.2) CS size (i.e. number of slots)
-cs_size = 25;
+cs_size = 2;
 
 % 1.3) number of simulation rounds (i.e. 'generate signals' -> 'fetch
 % inputs' -> process inputs -> set outputs cycles)
-round_n = 1000;
+round_n = 10;
 
 % 2) topology
 
@@ -68,6 +68,8 @@ end
 
 for r = 1:round_n
     
+    fprintf('********** ROUND %i: FIGHT **********\n', r)
+    
     i = 1;
     
     % 1) client(s) generates Interests, and leave it available on the
@@ -75,6 +77,10 @@ for r = 1:round_n
     for i = i:clnt_n
         
         nodes(i).requestContent;
+        
+        % 1.1) display outputs
+        fprintf('client[%i] outputs', i)
+        nodes(i).getOutPorts
             
     end
 
@@ -95,11 +101,18 @@ for r = 1:round_n
             % between the nodes, from the perspective of the current node
             near = T(i, cnnctd_nodes(j));
             far = T(cnnctd_nodes(j), i);
+            
+            %fprintf('router[%i] fetching', i)
+            %nodes(cnnctd_nodes(j)).getOutPort(far)
 
             % 2.2.2) The actual load operation...
             nodes(i).putInPort(nodes(cnnctd_nodes(j)).getOutPort(far), near);
 
         end
+        
+        % 2.3) display inputs
+        fprintf('router[%i] inputs', i)
+        nodes(i).getInPorts
         
     end
     
@@ -125,6 +138,10 @@ for r = 1:round_n
             nodes(i).putInPort(nodes(cnnctd_nodes(j)).getOutPort(far), near);
 
         end
+        
+        % 3.3) display inputs
+        fprintf('server[%i] inputs', i)
+        nodes(i).getInPorts
     
     end
     
@@ -155,7 +172,17 @@ for r = 1:round_n
         nodes(i).forwardInterests;
         nodes(i).forwardData;
         
-        % 4.2.3) clear inputs
+        % 4.2.3) display outputs, PIT and CS
+        fprintf('router[%i] outputs', i)
+        nodes(i).getOutPorts
+        
+        fprintf('router[%i] PIT', i)
+        nodes(i).PIT.PIT
+        
+        fprintf('router[%i] CS', i)
+        nodes(i).CS.CACHE
+        
+        % 4.2.4) clear inputs
         nodes(i).ifaces.clearInPorts;
         
     end
@@ -171,7 +198,11 @@ for r = 1:round_n
         % 4.3.2) a server answers
         nodes(i).answer;
         
-        % 4.3.3) clear inputs
+        % 4.3.3) display outputs
+        fprintf('server[%i] outputs', i)
+        nodes(i).getOutPorts
+        
+        % 4.3.4) clear inputs
         nodes(i).ifaces.clearInPorts;
     
     end
