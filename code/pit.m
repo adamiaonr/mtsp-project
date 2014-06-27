@@ -79,7 +79,8 @@ classdef pit < handle
             % 1) collect all the content indexes for which outstanding
             % Interests do not exist yet. these will be the Interests which
             % will be re-forwarded upstream.
-            remaining_interests = diag([~sum(obj.PIT, 2); zeros(obj.content_n, 1)]) * inputs;
+            %remaining_interests = diag([~sum(obj.PIT, 2); zeros(obj.content_n, 1)]) * inputs;
+            remaining_interests = [~sum(obj.PIT, 2); zeros(obj.content_n, 1)] & sum(inputs, 2);
             
             % 2) given the inputs on all interfaces, OR it with the
             % PIT contents. One assumes that 'inputs' in a C x I matrix
@@ -101,15 +102,19 @@ classdef pit < handle
         
             % basically, discard all the row values for which there is no
             % outstanding PIT entry            
-            data_inputs = (sum(inputs, 2) & 1);
-            remaining_data = diag(data_inputs((obj.content_n + 1):(2 * obj.content_n)));
-            remaining_data = (remaining_data * (obj.PIT .* 1));
-            remaining_data = [zeros(obj.content_n, obj.ifaces_n); remaining_data];
+            %data_inputs = (sum(inputs, 2) & 1);
+            %remaining_data = diag(data_inputs((obj.content_n + 1):(2 * obj.content_n)));
+            %remaining_data = (remaining_data * (obj.PIT .* 1));
+            %remaining_data = [zeros(obj.content_n, obj.ifaces_n); remaining_data];
             
+            data_inputs = inputs((obj.content_n + 1):(2 * obj.content_n), :) & 1;
+            remaining_data = data_inputs & (sum(obj.PIT, 2) * ones(1, obj.ifaces_n));
+            remaining_data = [zeros(obj.content_n, obj.ifaces_n); remaining_data];
+                        
             % now, free the positions in the PIT (since the awaiting Data
             % packets are about to be forwarded downstream)
-            %obj.PIT = (obj.PIT & ~inputs(1:obj.content_n,:));
-            obj.PIT = diag(~data_inputs((obj.content_n + 1):(2 * obj.content_n))) * (obj.PIT .* 1);
+            %obj.PIT = diag(~data_inputs((obj.content_n + 1):(2 * obj.content_n))) * (obj.PIT .* 1);
+            obj.PIT = obj.PIT & (~sum(data_inputs, 2) * ones(1, obj.ifaces_n));
             
         end
 

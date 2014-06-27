@@ -89,11 +89,16 @@ classdef router < node
             
             % place the output of the last step on the output ports of the 
             % appropriate interfaces (according to the FIB)
-            to_forward = sum(remaining_interests, 2) & 1;
-            to_forward = diag(to_forward(1:obj.content_n));
-            to_forward = to_forward * obj.FIB;
-            obj.putOutPorts([to_forward; zeros(obj.content_n, obj.ifaces_n)]);
+            %to_forward = sum(remaining_interests, 2) & 1;
+            %to_forward = diag(to_forward(1:obj.content_n));
+            %to_forward = diag(remaining_interests(1:obj.content_n));
+            %to_forward = to_forward * obj.FIB;
+            %obj.putOutPorts([to_forward; zeros(obj.content_n, obj.ifaces_n)]);
             
+            to_forward = remaining_interests(1:obj.content_n);
+            to_forward = obj.FIB & (to_forward * ones(1, obj.ifaces_n));            
+            obj.putOutPorts([to_forward; zeros(obj.content_n, obj.ifaces_n)]);
+                        
         end
         
         % forward Data packets

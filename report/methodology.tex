@@ -225,7 +225,7 @@ routers to forward the Interest signals, $\textbf{B}$, returned by the
 
 \begin{algorithmic}[1]
 
-\State \textbf{define} forwardData($\textbf{B}$):
+\State \textbf{define} forwardInterests($\textbf{B}$):
 \State
     \State $\textbf{B}' \leftarrow \textbf{B} \times \textbf{1}$
     \State $\textbf{L} \leftarrow$ diag$(\textbf{B}) \times$ \textbf{FIB}
@@ -233,7 +233,7 @@ routers to forward the Interest signals, $\textbf{B}$, returned by the
 
 \end{algorithmic}\shortvertbreak
 
-The last operation of the \textbf{forwardData()} routine (line 5) refers to 
+The last operation of the \textbf{forwardInterests()} routine (line 5) refers to 
 the (parallelized) `filling' of the output ports of all the interfaces $F$ of router $R_r$.\shortvertbreak
 
 In our model, the composition of the \textbf{FIB} is established at an initial phase, 

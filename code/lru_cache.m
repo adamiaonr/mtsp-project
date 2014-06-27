@@ -9,7 +9,7 @@ classdef lru_cache < cache
         % consecutive cache accesses for which content c hasn't been
         % requested
         age = []
-        
+                
     end
     
     methods
@@ -33,7 +33,7 @@ classdef lru_cache < cache
                 obj.stats_hits = zeros(content_n, 1);
                 obj.stats_miss = zeros(content_n, 1);
                 obj.stats_time = zeros(content_n, 1);
-                
+                                
             end
             
         end
@@ -52,7 +52,8 @@ classdef lru_cache < cache
             % 1) build the output Data signals
             
             % 1.1) get the cached contents at this point
-            cached = obj.getCached;
+            %cached = obj.getCached;
+            cached = sum(obj.CACHE, 2);
                         
             % 1.2) set the appropriate rows of inputs to [0 0 ... 0], i.e. 
             % all the row 
@@ -60,8 +61,11 @@ classdef lru_cache < cache
             % 1:obj.content_n (i.e. only Interest signals). the diag() statement allows
             % a direct matrix multiplication which 'erases' (i.e. sets to
             % [0 0 ... 0]) the appropriate rows in inputs.
-            data_outputs = diag([cached ; zeros(obj.content_n, 1)]) * inputs;
-                        
+            %data_outputs = diag([cached ; zeros(obj.content_n, 1)]);
+            %data_outputs = data_outputs * inputs;
+            ifaces_n = size(inputs, 2);
+            data_outputs = inputs & ([cached ; zeros(obj.content_n, 1)] * ones(1, ifaces_n));
+            
             % 1.3) swap the rows from outputs, as the top obj.content_n rows correspond
             % to Interest signals, while the bottom obj.content_n rows to Data signals.
             data_outputs = [data_outputs((obj.content_n + 1):(2 * obj.content_n),:); data_outputs(1:obj.content_n,:)];
@@ -69,7 +73,9 @@ classdef lru_cache < cache
             % 2) build the output Interest signals. no need to swap rows, 
             % as the order of rows is correct (Interest signals on top)
             not_cached = ~cached;
-            remaining_interests = diag([not_cached ; zeros(obj.content_n, 1)]) * inputs;
+            %remaining_interests = diag([not_cached ; zeros(obj.content_n, 1)]);
+            %remaining_interests = remaining_interests * inputs;
+            remaining_interests = inputs & ([not_cached ; zeros(obj.content_n, 1)] * ones(1, ifaces_n));
             
             % 3) update CS
             
@@ -147,7 +153,8 @@ classdef lru_cache < cache
             for i = 1:pseudo_order_n
                 
                 % 3.1) get the currently cached elements
-                cached = obj.getCached;
+                %cached = obj.getCached;
+                cached = sum(obj.CACHE, 2);
                 cached_n = sum(cached);
                 
                 % 3.2) update data gathering parameters (caching time)

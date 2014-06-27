@@ -5,14 +5,14 @@
 % 1) overall simulation parameters
 
 % 1.1) different number of content objects
-content_n = 30;
+content_n = 1000;
 
 % 1.2) CS size (i.e. number of slots)
-cs_size = 10;
+cs_size = 25;
 
 % 1.3) number of simulation rounds (i.e. 'generate signals' -> 'fetch
 % inputs' -> process inputs -> set outputs cycles)
-round_n = 100;
+round_n = 1000;
 
 % 2) topology
 
@@ -33,7 +33,7 @@ i = 1;
 
 % 2.2.2.1) content generation probabilities
 denominators = 1:1:content_n;
-epsilon = 0.25;
+epsilon = 0.250;
 lambda = 1 ./ (denominators + epsilon);
 
 % 2.2.2.2) create client(s)

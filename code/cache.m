@@ -88,8 +88,7 @@ classdef cache < handle
         % '0')
         function contents = getCached(obj)
             
-            %contents = sum(obj.CACHE, 2) & 1;
-            contents = (obj.CACHE * ones(obj.size, 1));
+            contents = sum(obj.CACHE, 2) & 1;
             
         end
                 
