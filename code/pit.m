@@ -14,22 +14,22 @@ classdef pit < handle
         % dimensions of the PIT, number of contents (rows) and num of 
         % interfaces (columns)
         content_n = 0;
-        iface_n = 0;
+        ifaces_n = 0;
         
     end
     
     methods
         
         % class constructor
-        function obj = pit(content_n, iface_n)
+        function obj = pit(content_n, ifaces_n)
             
             if (nargin == 2)
             
                 % initialize interface's buffer to zeros
-                obj.PIT = zeros(content_n, iface_n);
+                obj.PIT = zeros(content_n, ifaces_n);
                 
                 obj.content_n = content_n;
-                obj.iface_n = iface_n;
+                obj.ifaces_n = ifaces_n;
                 
             end
         end
@@ -104,7 +104,7 @@ classdef pit < handle
             data_inputs = (sum(inputs, 2) & 1);
             remaining_data = diag(data_inputs((obj.content_n + 1):(2 * obj.content_n)));
             remaining_data = (remaining_data * (obj.PIT .* 1));
-            remaining_data = [zeros(obj.content_n, obj.iface_n); remaining_data];
+            remaining_data = [zeros(obj.content_n, obj.ifaces_n); remaining_data];
             
             % now, free the positions in the PIT (since the awaiting Data
             % packets are about to be forwarded downstream)

@@ -1,4 +1,4 @@
-classdef client < handle
+classdef client < node
     %CLIENT Generates content requests (i.e. Interest signals) 
     %   Generates content requests, i.e. Interest signals, according to a
     %   Poisson process, with rate value lambda, set for each content type. 
@@ -7,13 +7,7 @@ classdef client < handle
     %   the number of 
     
     properties
-        
-        % a client has a single interface
-        iface@interface;
-        
-        % number of contents considered in the experiment
-        content_n;
-        
+                
         % lambda (i.e. rate) values for each content item
         lambda = [];
         
@@ -22,13 +16,18 @@ classdef client < handle
     methods
         
         %class constructor
-        function obj = client(content_n, lambda)
-           
-            % initialize the client's single interface
-            obj.iface = interface(content_n, 1);
+        function obj = client(id, content_n, ifaces_n, lambda)
+            
+            % set the element id
+            obj.id = id;
 
+            % number of content objects for the simulation
             obj.content_n = content_n;
-
+            
+            % initialize the client's single interface
+            obj.ifaces = interface(content_n, ifaces_n);
+            obj.ifaces_n = ifaces_n;
+            
             % set the Poisson distribution rates, must be a C x 1 array
             % of doubles
             obj.lambda = lambda;
@@ -42,10 +41,10 @@ classdef client < handle
             % generate Interest signals, for now will generate multiple
             % signals per step (this might need to be revised in the
             % future)
-            interests = [((obj.lambda - rand(obj.content_n, 1)) > 0); zeros(obj.content_n,1)];
+            interests = [((obj.lambda - rand(obj.content_n, obj.ifaces_n)) > 0); zeros(obj.content_n, obj.ifaces_n)];
             
             % activate the output Interest signals
-            obj.iface.putOutPorts(interests);
+            obj.ifaces.putOutPorts(interests);
             
         end
         

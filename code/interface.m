@@ -14,7 +14,7 @@ classdef interface < handle
     methods
         
         % class constructor
-        function obj = interface(n_contents, n_ifaces)
+        function obj = interface(n_contents, ifaces_n)
             
             if (nargin == 2)
             
@@ -22,8 +22,8 @@ classdef interface < handle
                 % row size must be set to 2 x C, due to both Interest and
                 % Data signals, which can both be present in output and
                 % input ports.
-                obj.inport = zeros(2 * n_contents, n_ifaces);
-                obj.outport = zeros(2 * n_contents, n_ifaces);
+                obj.inport = zeros(2 * n_contents, ifaces_n);
+                obj.outport = zeros(2 * n_contents, ifaces_n);
 
             end
         end

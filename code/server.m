@@ -1,29 +1,22 @@
-classdef server < handle
+classdef server < node
     %SERVER Source of content items
     
     properties
-    
-        % a client has a single interface
-        iface@interface;
-        
-        % number of contents considered in the experiment
-        content_n;
         
     end
     
     methods
         
         %class constructor
-        function obj = server(content_n)
-          
-            if (nargin == 1)
-           
-                % initialize the client's single interface
-                obj.iface = interface(content_n, 1);
-                
-                obj.content_n = content_n;
-                               
-            end
+        function obj = server(id, content_n, ifaces_n)
+                          
+            % set the element id
+            obj.id = id;
+            obj.content_n = content_n;
+
+            % initialize the client's single interface
+            obj.ifaces = interface(content_n, ifaces_n);
+            obj.ifaces_n = ifaces_n;
             
         end
         
@@ -32,8 +25,8 @@ classdef server < handle
         % to the output ports as Data signals.
         function data_outputs = answer(obj)
 
-            data_outputs = obj.iface.getInPorts;
-            obj.iface.putOutPorts([zeros(obj.content_n, 1); data_outputs((1:obj.content_n),:)]);
+            data_outputs = obj.ifaces.getInPorts;
+            obj.ifaces.putOutPorts([zeros(obj.content_n, obj.ifaces_n); data_outputs((1:obj.content_n), :)]);
             
         end
         
