@@ -28,50 +28,53 @@ classdef router < handle
         content_n = 0;
         iface_n = 0;
         
+        % simulation parameters
+        id;
+        %iface_ends = [];
+        
     end
 
     methods
         
-        function obj = router(iface_n, content_n, cache_size, cache_type)
-          
-            if (nargin == 4)
-                
-                obj.content_n = content_n;
-                obj.iface_n = iface_n;
-           
-                % create an NDN cache with size of 'cache_size' slots,
-                % instatiate a specific class according to cache_type
-                if (strcmpi('LRU', cache_type))
-                    
-                    obj.CS = lru_cache(content_n, cache_size);
-                    
-                else
-                    
-                    % default is an 'LRU' cache
-                    obj.CS = lru_cache(content_n, cache_size);
-                    
-                end
+        function obj = router(id, iface_n, content_n, cache_size, cache_type)
+                          
+            obj.id = id;
+            %obj.iface_ends = iface_ends;
 
-                % initialize the interface array, with size n_ifaces
-                
-                % the index of the iface array is important, as it
-                % identifies a specific iface, encoded in the topology
-                % matrix used to create an NDN network
-                obj.ifaces = interface(content_n, iface_n);
-                
-                % initialize the FIB
-                obj.FIB = zeros(content_n, iface_n);
-                
-                % TODO: BY DEFAULT, ALL FORWARDING OPERATIONS GO OUT 
-                % INTERFACE 1 (THIS MUST BE CHANGED IN THE FUTURE FOR 
-                % GENERALITY 
-                obj.FIB(:,1) = ones(content_n, 1);
-                
-                % initialize the PIT
-                obj.PIT = pit(content_n,iface_n);
-                
+            obj.content_n = content_n;
+            obj.iface_n = iface_n;
+
+            % create an NDN cache with size of 'cache_size' slots,
+            % instatiate a specific class according to cache_type
+            if (strcmpi('LRU', cache_type))
+
+                obj.CS = lru_cache(content_n, cache_size);
+
+            else
+
+                % default is an 'LRU' cache
+                obj.CS = lru_cache(content_n, cache_size);
+
             end
-            
+
+            % initialize the interface array, with size n_ifaces
+
+            % the index of the iface array is important, as it
+            % identifies a specific iface, encoded in the topology
+            % matrix used to create an NDN network
+            obj.ifaces = interface(content_n, iface_n);
+
+            % initialize the FIB
+            obj.FIB = zeros(content_n, iface_n);
+
+            % TODO: BY DEFAULT, ALL FORWARDING OPERATIONS GO OUT 
+            % INTERFACE 1 (THIS MUST BE CHANGED IN THE FUTURE FOR 
+            % GENERALITY 
+            obj.FIB(:,2) = ones(content_n, 1);
+
+            % initialize the PIT
+            obj.PIT = pit(content_n,iface_n);
+                            
         end
                 
         % . one assumes the outputs are encoded as a C x I matrix, in which

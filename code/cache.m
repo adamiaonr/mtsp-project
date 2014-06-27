@@ -22,8 +22,15 @@ classdef cache < handle
         CACHE = []
         
         % some auxiliary properties
+
+        % cache sizes
         size = 0;
         content_n = 0;
+        
+        % some data structures for data gathering
+        stats_hits = [];
+        stats_miss = [];
+        stats_time = [];
         
     end
     
@@ -81,7 +88,8 @@ classdef cache < handle
         % '0')
         function contents = getCached(obj)
             
-            contents = sum(obj.CACHE, 2) & 1;
+            %contents = sum(obj.CACHE, 2) & 1;
+            contents = (obj.CACHE * ones(obj.size, 1));
             
         end
                 

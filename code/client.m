@@ -23,19 +23,15 @@ classdef client < handle
         
         %class constructor
         function obj = client(content_n, lambda)
-          
-            if (nargin == 1)
            
-                % initialize the client's single interface
-                obj.iface = interface(content_n, 1);
-                
-                obj.content_n = content_n;
-               
-                % set the Poisson distribution rates, must be a C x 1 array
-                % of doubles
-                obj.lambda = lambda;
-                
-            end
+            % initialize the client's single interface
+            obj.iface = interface(content_n, 1);
+
+            obj.content_n = content_n;
+
+            % set the Poisson distribution rates, must be a C x 1 array
+            % of doubles
+            obj.lambda = lambda;
             
         end
         
@@ -46,7 +42,7 @@ classdef client < handle
             % generate Interest signals, for now will generate multiple
             % signals per step (this might need to be revised in the
             % future)
-            interests = ((obj.lambda - rand(obj.content_n, 1)) > 0);
+            interests = [((obj.lambda - rand(obj.content_n, 1)) > 0); zeros(obj.content_n,1)];
             
             % activate the output Interest signals
             obj.iface.putOutPorts(interests);
