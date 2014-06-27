@@ -9,12 +9,23 @@ classdef interface < handle
         inport = []
         outport = []
         
+        % simulation parameters
+        content_n = 0;
+        ifaces_n = 0;
+        
+        % some data structures for data gathering
+        stats_interests_rcvd = [];        
+        stats_interests_sent = [];
+        
+        stats_data_rcvd = [];
+        stats_data_sent = [];
+        
     end
     
     methods
         
         % class constructor
-        function obj = interface(n_contents, ifaces_n)
+        function obj = interface(content_n, ifaces_n)
             
             if (nargin == 2)
             
@@ -22,8 +33,15 @@ classdef interface < handle
                 % row size must be set to 2 x C, due to both Interest and
                 % Data signals, which can both be present in output and
                 % input ports.
-                obj.inport = zeros(2 * n_contents, ifaces_n);
-                obj.outport = zeros(2 * n_contents, ifaces_n);
+                obj.inport = zeros(2 * content_n, ifaces_n);
+                obj.outport = zeros(2 * content_n, ifaces_n);
+                
+                % some data structures for data gathering
+                obj.stats_interests_rcvd = zeros(content_n, ifaces_n);
+                obj.stats_interests_sent = zeros(content_n, ifaces_n);
+                
+                obj.stats_data_rcvd = zeros(content_n, ifaces_n);
+                obj.stats_data_sent = zeros(content_n, ifaces_n);
 
             end
         end
@@ -33,12 +51,20 @@ classdef interface < handle
         
             obj.inport = put(obj.inport, inputs);
             
+            % statistics
+            obj.stats_interests_rcvd = obj.stats_interests_rcvd + inputs(1:obj.content_n, :);
+            obj.stats_data_rcvd = obj.stats_data_rcvd + inputs((obj.content_n + 1):(2 * obj.content_n), :);
+            
         end
         
         % add the contents in 'output' to the output port of the interface
         function obj = putInPort(obj, input, iface)
         
             obj.inport(:, iface) = put(obj.inport(:, iface), input);
+            
+            % statistics
+            obj.stats_interests_rcvd(:, iface) = obj.stats_interests_rcvd(:, iface) + input(1:obj.content_n, iface);
+            obj.stats_data_rcvd(:, iface) = obj.stats_data_rcvd(:, iface) + input((obj.content_n + 1):(2 * obj.content_n), iface);
             
         end
         
@@ -61,12 +87,19 @@ classdef interface < handle
         
             obj.outport = put(obj.outport, outputs);
             
+            % statistics
+            obj.stats_interests_sent = obj.stats_interests_sent + outputs(1:obj.content_n, :);
+            obj.stats_data_sent = obj.stats_data_sent + outputs((obj.content_n + 1):(2 * obj.content_n), :);
+            
         end
 
         % add the contents in 'output' to the output port of the interface
         function obj = putOutPort(obj, output, iface)
         
             obj.outport(:, iface) = put(obj.outport(:, iface), output);
+            
+            obj.stats_interests_sent(:, iface) = obj.stats_interests_sent(:, iface) + output(1:obj.content_n, iface);
+            obj.stats_data_sent(:, iface) = obj.stats_data_sent(:, iface) + output((obj.content_n + 1):(2 * obj.content_n), iface);
             
         end
 

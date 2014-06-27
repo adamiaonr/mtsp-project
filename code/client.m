@@ -11,6 +11,9 @@ classdef client < node
         % lambda (i.e. rate) values for each content item
         lambda = [];
         
+        % some data structures for data gathering
+        stats_requests = [];
+        
     end
     
     methods
@@ -32,6 +35,9 @@ classdef client < node
             % of doubles
             obj.lambda = lambda;
             
+            % statistics
+            obj.stats_requests = zeros(content_n, 1);
+            
         end
         
         % returns a C x 1 array with the Interest signals for each content 
@@ -45,6 +51,9 @@ classdef client < node
             
             % activate the output Interest signals
             obj.ifaces.putOutPorts(interests);
+            
+            % statistics
+            obj.stats_requests = obj.stats_requests + sum(interests(1:obj.content_n, :), 2);
             
         end
         

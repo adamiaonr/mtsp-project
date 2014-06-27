@@ -91,7 +91,8 @@ classdef lru_cache < cache
             % 4) data gathering operations
             
             % 4.1) update # of hits
-            obj.stats_hits(i) = obj.stats_hits(i) + 1;
+            hits = cached & sum(inputs(1:obj.content_n, :), 2);
+            obj.stats_hits((hits > 0)) = obj.stats_hits((hits > 0)) + 1;
             
             % 4.2) update # misses
             j = find(sum(remaining_interests, 2));

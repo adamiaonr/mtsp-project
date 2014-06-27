@@ -19,7 +19,7 @@ classdef router < node
         % C) with a set of outgoing interfaces, which Interest packets must
         % follow
         FIB = []
-                
+                        
     end
 
     methods

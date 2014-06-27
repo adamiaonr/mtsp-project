@@ -12,7 +12,7 @@ cs_size = 2;
 
 % 1.3) number of simulation rounds (i.e. 'generate signals' -> 'fetch
 % inputs' -> process inputs -> set outputs cycles)
-round_n = 10;
+round_n = 100;
 
 % 2) topology
 
