@@ -36,6 +36,9 @@ classdef interface < handle
                 obj.inport = zeros(2 * content_n, ifaces_n);
                 obj.outport = zeros(2 * content_n, ifaces_n);
                 
+                obj.content_n = content_n;
+                obj.ifaces_n = ifaces_n;
+                
                 % some data structures for data gathering
                 obj.stats_interests_rcvd = zeros(content_n, ifaces_n);
                 obj.stats_interests_sent = zeros(content_n, ifaces_n);
@@ -62,9 +65,8 @@ classdef interface < handle
         
             obj.inport(:, iface) = put(obj.inport(:, iface), input);
             
-            % statistics
-            obj.stats_interests_rcvd(:, iface) = obj.stats_interests_rcvd(:, iface) + input(1:obj.content_n, iface);
-            obj.stats_data_rcvd(:, iface) = obj.stats_data_rcvd(:, iface) + input((obj.content_n + 1):(2 * obj.content_n), iface);
+            obj.stats_interests_rcvd(:, iface) = obj.stats_interests_rcvd(:, iface) + input(1:obj.content_n, :);
+            obj.stats_data_rcvd(:, iface) = obj.stats_data_rcvd(:, iface) + input((obj.content_n + 1):(2 * obj.content_n), :);
             
         end
         
@@ -98,8 +100,8 @@ classdef interface < handle
         
             obj.outport(:, iface) = put(obj.outport(:, iface), output);
             
-            obj.stats_interests_sent(:, iface) = obj.stats_interests_sent(:, iface) + output(1:obj.content_n, iface);
-            obj.stats_data_sent(:, iface) = obj.stats_data_sent(:, iface) + output((obj.content_n + 1):(2 * obj.content_n), iface);
+            obj.stats_interests_sent(:, iface) = obj.stats_interests_sent(:, iface) + output(1:obj.content_n, :);
+            obj.stats_data_sent(:, iface) = obj.stats_data_sent(:, iface) + output((obj.content_n + 1):(2 * obj.content_n), :);
             
         end
 
