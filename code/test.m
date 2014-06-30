@@ -310,10 +310,10 @@ miss_level_reg = zeros(content_n, level_n);
 for i = (clnt_n + 1):(clnt_n + rtr_n)
     
     hit_level(:,i) = nodes(i).CS.stats_hits ./ (nodes(i).ifaces.stats_interests_rcvd(:, 1) + 1);
-    hit_level_reg(:,i) = poly_regression((1:1:content_n)', hit_level(:,i), (1:1:content_n)', 5);
+    hit_level_reg(:,i) = poly_regression((1:1:content_n)', hit_level(:,i), (1:1:content_n)', 4);
     
     miss_level(:,i) = nodes(i).CS.stats_miss ./ (nodes(i).ifaces.stats_interests_rcvd(:, 1) + 1);
-    miss_level_reg(:,i) = poly_regression((1:1:content_n)', miss_level(:,i), (1:1:content_n)', 5);
+    miss_level_reg(:,i) = poly_regression((1:1:content_n)', miss_level(:,i), (1:1:content_n)', 4);
     
 end
 
@@ -331,10 +331,7 @@ for i = (clnt_n + 1):(clnt_n + rtr_n)
     
     plot (1:1:content_n, hit_level(:,i)',  sprintf('o%s', colors(i - (clnt_n + 1) + 1)), 'LineWidth', 1);
     plot (1:1:content_n, hit_level_reg(:,i)',  sprintf('-%s', colors(i - (clnt_n + 1) + 1)), 'LineWidth', 1);
-    
-    plot (1:1:content_n, hit_level(:,i)',  sprintf('o%s', colors(i - (clnt_n + 1) + 1)), 'LineWidth', 1);
-    plot (1:1:content_n, hit_level_reg(:,i)',  sprintf('-%s', colors(i - (clnt_n + 1) + 1)), 'LineWidth', 1);
-    
+        
 end
 
 %legend('Level 2', 'Level 3', 'Level 4');
@@ -353,7 +350,8 @@ ylabel('Miss rate');
 
 for i = (clnt_n + 1):(clnt_n + rtr_n)
     
-    plot (1:1:content_n, miss_level(:,i)',  sprintf('o%s', colors(i - (clnt_n + 1) + 1)), 'LineWidth', 1);    
+    plot (1:1:content_n, miss_level(:,i)',  sprintf('o%s', colors(i - (clnt_n + 1) + 1)), 'LineWidth', 1);
+    plot (1:1:content_n, miss_level_reg(:,i)',  sprintf('-%s', colors(i - (clnt_n + 1) + 1)), 'LineWidth', 1);
     
 end
 
