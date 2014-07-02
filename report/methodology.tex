@@ -146,7 +146,7 @@ of all the interfaces $F_f$, at some router $R_r$:
 \State
     \State $\textbf{A}' \leftarrow \textbf{A}(1:|O|,:)$
 %    \State $\textbf{D} \leftarrow$ diag$(\neg(\textbf{PIT} \times \textbf{1}))$
-    \State $\textbf{B} \leftarrow$ $\neg(\textbf{PIT} \times \textbf{1}^{|O|}) \ \& \ (\textbf{A}' \times \textbf{1}^{|O|})$
+    \State $\textbf{B} \leftarrow$ $\neg(\textbf{PIT} \times \textbf{1}^{|F|}) \ \& \ (\textbf{A}' \times \textbf{1}^{|F|})$
 %    \State $\textbf{B} \leftarrow \textbf{D} \times \textbf{A}'$ 
     \State \textbf{PIT} $\leftarrow$ \textbf{PIT} $|$ $\textbf{A}'$ 
     \State \Return $\textbf{B}$
@@ -165,7 +165,7 @@ column vector which indicates the absence (encoded as  `1') and presence
 (encoded as `0') of pending Interests for some content object $O_o$. Still in 
 line 4, we obtain a $|O| \times 1$ column vector, $\textbf{B}$, which encodes the 
 only Interest signals that the NDN router needs to forward upstream. This is 
-accomplished by taking the logic AND, `$\&$', between $\neg(\textbf{PIT} \times \textbf{1}^{|O|})$ and 
+accomplished by taking the logic AND, `$\&$', between $\neg(\textbf{PIT} \times \textbf{1}^{|F|})$ and 
 $\textbf{A}'$. Note that even 
 if $\textbf{A}'$ includes some $i_{O_o} > 1$, we only need to forward one Interest 
 over the interfaces specified in the FIB, and so the binary encoding of $\textbf{B}$, 
@@ -182,9 +182,10 @@ interfaces.\shortvertbreak
 \State \textbf{define} PIT::updateOnData($\textbf{A}$):
 \State
     \State $\textbf{A}' \leftarrow \textbf{A}(|O|+1:2\,|O|,:)$
+    \State $\textbf{G} \leftarrow (\textbf{A}' \times \textbf{1}^{|F|}) \times \textbf{1}'^{|F|}$
 %    \State $\textbf{D} \leftarrow \textbf{A}' \times \textbf{1}$
-    \State $\textbf{E} \leftarrow$ $\textbf{PIT} \ \& \ (\textbf{A}' \times \textbf{1}'^{|F|})$
-    \State \textbf{PIT} $\leftarrow$ $\textbf{PIT} \ \& \ \neg(\textbf{A}' \times \textbf{1}'^{|F|})$ 
+    \State $\textbf{E} \leftarrow$ $\textbf{PIT} \ \& \ \textbf{G}$
+    \State \textbf{PIT} $\leftarrow$ $\textbf{PIT} \ \& \ \neg\textbf{G}$ 
     \State \Return $\textbf{E}$
 
 \end{algorithmic}\shortvertbreak
@@ -192,8 +193,11 @@ interfaces.\shortvertbreak
 With the explanation given above for the \textbf{updateOnInterest()} routine, 
 the understanding of \textbf{updateOnData()} is left to the reader. Note that 
 the objective of this last routine is the reverse operation of \textbf{updateOnInterest()}, i.e. forwarding Data 
-packets over the interfaces for which there is a registered Interest in the \textbf{PIT}. We 
-also note that the final step of the operation (line 5) consists in erasing 
+packets over the interfaces for which there is a registered Interest in the \textbf{PIT}. Also 
+note that $\textbf{G}$ consists in a $|O| \times |F|$ matrix, which expands the single-column 
+vector $\textbf{A}' \times \textbf{1}^{|F|}$ to $|F|$ columns (line 4), making it ready 
+for the subsequent AND (`\&') operation (line 5); and that the final 
+step of the operation (line 6) consists in erasing 
 all Interest registrations which have been successfully attended.\shortvertbreak
 
 \subsubsection{Forwarding Information Base (FIB)}
@@ -233,8 +237,8 @@ related to the CS, explained in Sections~\ref{subsec:meth-cs} and
     \State $\textbf{B} \leftarrow \text{PIT::updateOnInterest(\textbf{D})}$
 %    \State $\textbf{B}' \leftarrow \textbf{B} \times \textbf{1}$
 %    \State $\textbf{L} \leftarrow$ diag$(\textbf{B}) \times$ \textbf{FIB}
-    \State $\textbf{G} \leftarrow$ $\textbf{FIB} \ \& \ (\textbf{B} \times \textbf{1}'^{|F|})$
-    \State $F_{n,1:|F|,out} \leftarrow \textbf{G}$
+    \State $\textbf{H} \leftarrow$ $\textbf{FIB} \ \& \ (\textbf{B} \times \textbf{1}'^{|F|})$
+    \State $F_{n,1:|F|,out} \leftarrow \textbf{H}$
 
 \end{algorithmic}\shortvertbreak
 
