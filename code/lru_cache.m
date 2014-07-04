@@ -80,21 +80,21 @@ classdef lru_cache < cache
             % 3) update CS
             
             % 3.1) update the age of the content items for each we just
-            % witnessed cache hits
+            % WITNESSED CACHE HITS
             i = (cached > 0);
-            
-            % 3.2) according to LRU policy, reset the age of the cache hit,
-            % increase the age of all others by +1
-            obj.age = obj.age + 1;
-            obj.age(i) = 0;
-            
+                        
             % 4) data gathering operations
             
             % 4.1) update # of hits
             hits = cached & sum(inputs(1:obj.content_n, :), 2);
             obj.stats_hits((hits > 0)) = obj.stats_hits((hits > 0)) + 1;
             
-            % 4.2) update # misses
+            % 4.2) according to LRU policy, reset the age of the cache hit,
+            % increase the age of all others by +1
+            obj.age = obj.age + 1;
+            obj.age((hits > 0)) = 0;
+            
+            % 4.3) update # misses
             j = find(sum(remaining_interests, 2));
             obj.stats_miss(j) = obj.stats_miss(j) + 1;
             
@@ -151,16 +151,16 @@ classdef lru_cache < cache
             % NOTE: it involves a 'for' cycle, that's horrible in Matlab,
             % but for now, that's the best I can do...            
             
+            cached = sum(obj.CACHE, 2);
+            cached_n = sum(cached);
+            
             for i = 1:pseudo_order_n
                 
                 % 3.1) get the currently cached elements
                 %cached = obj.getCached;
                 cached = sum(obj.CACHE, 2);
                 cached_n = sum(cached);
-                
-                % 3.2) update data gathering parameters (caching time)
-                obj.stats_time((cached > 0)) = obj.stats_miss((cached > 0)) + 1;
-                
+                                
                 % 3.1) check if the element is already cached, if that's so
                 % simply update the age value to 0
                 if (sum(obj.CACHE(pseudo_order(i),:), 2) == 0)                
@@ -171,8 +171,12 @@ classdef lru_cache < cache
                         % 3.2.1) cache the new Data value and evict the 
                         % LRU value, according to the age matrix
                         [sortedValues, sortIndex] = sort(obj.age, 'descend');
-                        sortIndex = find(sortIndex .* cached);
                         
+                        % 3.2.2) determine the sorted indexes which also
+                        % happen to be cached
+                        sortIndex = cached(sortIndex, :) .* sortIndex;
+                        sortIndex = sortIndex(sortIndex > 0);
+                                                                                                                        
                         obj.CACHE(pseudo_order(i),:) = obj.CACHE(sortIndex(1),:);            
                         obj.CACHE(sortIndex(1),:) = zeros(1, obj.size);
 
@@ -195,6 +199,10 @@ classdef lru_cache < cache
                 obj.age(pseudo_order(i)) = 0;
                 
             end
+                        
+            % 3.2) update data gathering parameters (caching time)
+            %obj.stats_time((cached > 0)) = obj.stats_time((cached > 0)) + 1;
+            obj.stats_time = obj.stats_time + cached;
                         
         end
         

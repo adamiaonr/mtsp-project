@@ -10,11 +10,11 @@ addpath('~/Workbench/mtsp-project/code/utils/')
 content_n = 100;
 
 % 1.2) CS size (i.e. number of slots)
-cs_size = 5;
+cs_size = 25;
 
 % 1.3) number of simulation rounds (i.e. 'generate signals' -> 'fetch
 % inputs' -> process inputs -> set outputs cycles)
-round_n = 100;
+round_n = 1000;
 
 % 2) topology
 
@@ -67,6 +67,7 @@ for i = i:(clnt_n + rtr_n + srvr_n)
 end
 
 %% simulation rounds
+content_requests_time = zeros(content_n, round_n);
 
 for r = 1:round_n
     
@@ -79,8 +80,15 @@ for r = 1:round_n
     for i = i:clnt_n
         
         % 1.1) after round (round_n - 20), no more Interests
-        if (r < (round_n - 20))
-            nodes(i).requestContent;
+        if (r < (round_n - 5))
+            requests = nodes(i).requestContent;
+        end
+        
+        % 1.1.1) Content requests (total) over time
+        if (r > 2)
+            content_requests_time(:, r) = content_requests_time(:, r - 1) + requests(1:content_n, :);
+        else
+            content_requests_time(:, r) = requests(1:content_n, :);
         end
         
         % 1.1) display outputs
@@ -242,6 +250,26 @@ for r = 1:round_n
 end
 
 % 6) Plottin' time...
+colors = ['b', 'r', 'g', 'm', 'y', 'k'];
+
+% % 6.0) requests over time
+% figure();
+% 
+% grid on;
+% hold on;
+% 
+% xlabel('Round #');
+% ylabel('# of Requests (Cumulative)');
+% 
+% for c = (content_n - content_n + 1):(content_n)
+% 
+%     plot (1:1:round_n, content_requests_time(c, :), sprintf('-%s', colors(rem(c, 6) + 1)), 'LineWidth', 1);
+%     
+% end
+% 
+% title(sprintf('Requests over Time'));
+% 
+% hold off;
 
 % 6.1) total number of Interests/Data sent/received, for each network 
 % node
@@ -267,7 +295,7 @@ subplot(1, 2, 1);
 grid on;
 hold on;
 
-xlabel('Node Index');
+xlabel('Node index');
 ylabel('# of Interests');
 
 isent_ = plot (1:1:(clnt_n + rtr_n + srvr_n), isent,  '-ob', 'LineWidth', 1);
@@ -284,7 +312,7 @@ subplot(1, 2, 2);
 grid on;
 hold on;
 
-xlabel('Node Index');
+xlabel('Node index');
 ylabel('# of Data packets');
 
 dsent_ = plot (1:1:(clnt_n + rtr_n + srvr_n), dsent,  '-ob', 'LineWidth', 1);
@@ -298,8 +326,6 @@ hold off;
 
 % 6.2) Cache hit and miss rate per content object, at different NDN router
 % levels (this implies the definition of level)
-colors = ['b', 'r', 'g', 'm', 'y', 'k'];
-
 level_n = 3;
 
 hit_level = zeros(content_n, level_n);
@@ -310,10 +336,10 @@ miss_level_reg = zeros(content_n, level_n);
 for i = (clnt_n + 1):(clnt_n + rtr_n)
     
     hit_level(:,i) = nodes(i).CS.stats_hits ./ (nodes(i).ifaces.stats_interests_rcvd(:, 1) + 1);
-    hit_level_reg(:,i) = poly_regression((1:1:content_n)', hit_level(:,i), (1:1:content_n)', 4);
+    hit_level_reg(:,i) = poly_regression((1:1:content_n)', hit_level(:,i), (1:1:content_n)', 3);
     
     miss_level(:,i) = nodes(i).CS.stats_miss ./ (nodes(i).ifaces.stats_interests_rcvd(:, 1) + 1);
-    miss_level_reg(:,i) = poly_regression((1:1:content_n)', miss_level(:,i), (1:1:content_n)', 4);
+    miss_level_reg(:,i) = poly_regression((1:1:content_n)', miss_level(:,i), (1:1:content_n)', 3);
     
 end
 
@@ -324,17 +350,27 @@ subplot(1, 2, 1);
 grid on;
 hold on;
 
+% 6.2.1) apparently, this is important
+axis([0 content_n 0 1]);
+
 xlabel('Content index');
 ylabel('Hit rate');
+
+% 6.2.1) some references for the dynamic plot list (both for the plot
+% objects and the legend strings)
+plot_obj = zeros(1, rtr_n);
+plot_str = cell(1, rtr_n);
 
 for i = (clnt_n + 1):(clnt_n + rtr_n)
     
     plot (1:1:content_n, hit_level(:,i)',  sprintf('o%s', colors(i - (clnt_n + 1) + 1)), 'LineWidth', 1);
-    plot (1:1:content_n, hit_level_reg(:,i)',  sprintf('-%s', colors(i - (clnt_n + 1) + 1)), 'LineWidth', 1);
-        
+    plot_obj(i - clnt_n) = plot(1:1:content_n, hit_level_reg(:,i)',  sprintf('-%s', colors(i - (clnt_n + 1) + 1)), 'LineWidth', 1);
+    plot_str{i- clnt_n} = sprintf('Level %d', i - clnt_n);
+    
 end
 
-%legend('Level 2', 'Level 3', 'Level 4');
+% 6.2.2) and this is how you build up a dynamic legend...
+legend(plot_obj(1:rtr_n), plot_str{1:rtr_n});
 
 title(sprintf('Cache hit rate'));
 
@@ -345,18 +381,65 @@ subplot(1, 2, 2);
 grid on;
 hold on;
 
+axis([0 content_n 0 1]);
+
 xlabel('Content index');
 ylabel('Miss rate');
+
+plot_obj = zeros(1, rtr_n);
+plot_str = cell(1, rtr_n);
 
 for i = (clnt_n + 1):(clnt_n + rtr_n)
     
     plot (1:1:content_n, miss_level(:,i)',  sprintf('o%s', colors(i - (clnt_n + 1) + 1)), 'LineWidth', 1);
-    plot (1:1:content_n, miss_level_reg(:,i)',  sprintf('-%s', colors(i - (clnt_n + 1) + 1)), 'LineWidth', 1);
+    plot_obj(i - clnt_n) = plot (1:1:content_n, miss_level_reg(:,i)',  sprintf('-%s', colors(i - (clnt_n + 1) + 1)), 'LineWidth', 1);
+    plot_str{i- clnt_n} = sprintf('Level %d', i - clnt_n);
     
 end
 
-%legend('Level 2', 'Level 3', 'Level 4');
+legend(plot_obj(1:rtr_n), plot_str{1:rtr_n});
 
 title(sprintf('Cache miss rate'));
+
+hold off;
+
+% 6.3) Caching time per content object, at different NDN router
+% levels (this implies the definition of level)
+time_level = zeros(content_n, level_n);
+
+for i = (clnt_n + 1):(clnt_n + rtr_n)
+    
+    hit_level(:,i) = nodes(i).CS.stats_hits ./ (nodes(i).ifaces.stats_interests_rcvd(:, 1) + 1);
+    hit_level_reg(:,i) = poly_regression((1:1:content_n)', hit_level(:,i), (1:1:content_n)', 3);
+    
+    miss_level(:,i) = nodes(i).CS.stats_miss ./ (nodes(i).ifaces.stats_interests_rcvd(:, 1) + 1);
+    miss_level_reg(:,i) = poly_regression((1:1:content_n)', miss_level(:,i), (1:1:content_n)', 3);
+    
+end
+
+figure();
+
+grid on;
+hold on;
+
+xlabel('Content index');
+ylabel('Relative time (to # of rounds)');
+
+% 6.2.1) some references for the dynamic plot list (both for the plot
+% objects and the legend strings)
+plot_obj = zeros(1, rtr_n);
+plot_str = cell(1, rtr_n);
+
+for i = (clnt_n + 1):(clnt_n + rtr_n)
+        
+    plot_obj(i - clnt_n) = plot(1:1:content_n, (nodes(i).CS.stats_time ./ round_n)', sprintf('-%s', colors(i - (clnt_n + 1) + 1)), 'LineWidth', 1);
+    plot_str{i - clnt_n} = sprintf('Level %d', i - clnt_n);
+    
+end
+
+% 6.2.2) and this is how you build up a dynamic legend...
+legend(plot_obj(1:rtr_n), plot_str{1:rtr_n});
+
+title(sprintf('Relative time in CS'));
 
 hold off;

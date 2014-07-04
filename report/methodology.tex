@@ -193,10 +193,11 @@ interfaces.\shortvertbreak
 With the explanation given above for the \textbf{updateOnInterest()} routine, 
 the understanding of \textbf{updateOnData()} is left to the reader. Note that 
 the objective of this last routine is the reverse operation of \textbf{updateOnInterest()}, i.e. forwarding Data 
-packets over the interfaces for which there is a registered Interest in the \textbf{PIT}. Also 
+packets over the interfaces for which there is a registered Interest in the \textbf{PIT}, whit 
+the result encoded in matrix $\textbf{E}$. Also 
 note that $\textbf{G}$ consists in a $|O| \times |F|$ matrix, which expands the single-column 
 vector $\textbf{A}' \times \textbf{1}^{|F|}$ to $|F|$ columns (line 4), making it ready 
-for the subsequent AND (`\&') operation (line 5); and that the final 
+for the subsequent AND (`\&') operations (lines 5 and 6); and that the final 
 step of the operation (line 6) consists in erasing 
 all Interest registrations which have been successfully attended.\shortvertbreak
 
