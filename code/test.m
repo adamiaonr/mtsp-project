@@ -10,7 +10,7 @@ cs_size = 25;
 
 % 1.1.3) number of simulation rounds (i.e. 'generate signals' -> 'fetch
 % inputs' -> process inputs -> set outputs cycles)
-round_n = 1000;
+round_n = 10000;
 
 % 1.1.4) specify the topology matrix (commented case is a cascade 
 % topology, 1 client, 3 levels - i.e. NDN routers - and 1 server).

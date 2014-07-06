@@ -182,7 +182,7 @@ interfaces.\shortvertbreak
 \State \textbf{define} PIT::updateOnData($\textbf{A}$):
 \State
     \State $\textbf{A}' \leftarrow \textbf{A}(|O|+1:2\,|O|,:)$
-    \State $\textbf{G} \leftarrow (\textbf{A}' \times \textbf{1}^{|F|}) \times \textbf{1}'^{|F|}$
+    \State $\textbf{G} \leftarrow (\textbf{A}' \times \textbf{1}^{|F|}) \times {\textbf{1}^{|F|}}^{T}$
 %    \State $\textbf{D} \leftarrow \textbf{A}' \times \textbf{1}$
     \State $\textbf{E} \leftarrow$ $\textbf{PIT} \ \& \ \textbf{G}$
     \State \textbf{PIT} $\leftarrow$ $\textbf{PIT} \ \& \ \neg\textbf{G}$ 
@@ -238,7 +238,7 @@ related to the CS, explained in Sections~\ref{subsec:meth-cs} and
     \State $\textbf{B} \leftarrow \text{PIT::updateOnInterest(\textbf{D})}$
 %    \State $\textbf{B}' \leftarrow \textbf{B} \times \textbf{1}$
 %    \State $\textbf{L} \leftarrow$ diag$(\textbf{B}) \times$ \textbf{FIB}
-    \State $\textbf{H} \leftarrow$ $\textbf{FIB} \ \& \ (\textbf{B} \times \textbf{1}'^{|F|})$
+    \State $\textbf{H} \leftarrow$ $\textbf{FIB} \ \& \ (\textbf{B} \times {\textbf{1}^{|F|}}^{T})$
     \State $F_{n,1:|F|,out} \leftarrow \textbf{H}$
 
 \end{algorithmic}\shortvertbreak
@@ -255,7 +255,7 @@ forwarding of Data packets.\shortvertbreak
 \begin{figure}[h!]
 
     \centering
-    \includegraphics[width=0.40\textwidth]{figures/fib-topo.png}
+    \includegraphics[width=0.30\textwidth]{figures/fib-topo.png}
     \cprotect\caption{Simple example of an NDN network topology.}
     \label{fig:fib-topo}
 
@@ -289,7 +289,7 @@ index, i.e. $P_p$, with $p = \{1, 2, ..., |P|\}$, which express the idea of `lev
 $O_o$, occupying slot $P_2$, is at the 2\textsuperscript{nd} 
 (highest) position of the \textbf{CS}. $P_1$ is usually interpreted as the `highest' 
 level, and $P_{|P|}$ the `lowest', nevertheless the meaning is of the `levels' 
-is often dependent on the caching algorithm implemented by the CS. In fact, we 
+is often dependent on the cache algorithm implemented by the CS. In fact, we 
 model a CS as having a general behavior (presented in this section), and a specific 
 behavior, which depends on the cache algorithm the CS implements. We discuss caching 
 algorithms in Section~\ref{subsec:meth-caching-algs}.\shortvertbreak
@@ -312,7 +312,7 @@ conditions for the validity of \textbf{CS} are:
 \subsection{Endpoints}
 \label{subsec:meth-endpoints}
 
-\subsection{Caching Algorithms}
+\subsection{Cache Algorithms}
 \label{subsec:meth-caching-algs}
 
 \subsection{`Connecting the Dots'}
