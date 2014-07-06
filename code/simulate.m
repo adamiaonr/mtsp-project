@@ -1,4 +1,4 @@
-function [] = simulate(content_n, content_popularity, cs_size, cs_type, round_n, topology, clnt_n, rtr_n, rtr_level, srvr_n)
+function [] = simulate(content_n, content_popularity, cs_size, cs_type, round_n, topology, clnt_n, rtr_n, rtr_level, srvr_n, figure_dir)
 %UNTITLED Summary of this function goes here
 %   Detailed explanation goes here
 
@@ -310,6 +310,13 @@ title(sprintf('Data packets'));
 
 hold off;
 
+% 6.1.1) save the figure
+folder = sprintf('%s/%s/%d/', figure_dir, cs_type, cs_size);
+mkdir(folder);
+
+filename = sprintf('%s/6-1.fig', folder);
+saveas(gcf, filename);
+
 % 6.2) same thing as 6.1, but applied to topology levels (not individual
 % clients, routers or servers)
 rtr_level_n = size(rtr_level, 2);
@@ -372,6 +379,9 @@ title(sprintf('Data packets per level'));
 
 hold off;
 
+filename = sprintf('%s/6-2.fig', folder);
+saveas(gcf, filename);
+
 % 6.3) Cache hit and miss rate per content object, at different NDN router
 % levels (this implies the definition of level, encoded in the rtr_level 
 % matrix)
@@ -405,8 +415,8 @@ for i = 2:(rtr_level_n - 1)
     hit_level(:,i) = hit_level(:,i) ./ icumul;
     miss_level(:,i) = miss_level(:,i) ./ icumul;
     
-    hit_level_reg(:,i) = poly_regression((1:1:content_n)', hit_level(:,i), (1:1:content_n)', 3);
-    miss_level_reg(:,i) = poly_regression((1:1:content_n)', miss_level(:,i), (1:1:content_n)', 3);
+    hit_level_reg(:,i) = poly_regression((1:1:content_n)', (hit_level(:,i)), (1:1:content_n)', 3);
+    miss_level_reg(:,i) = poly_regression((1:1:content_n)', (miss_level(:,i)), (1:1:content_n)', 3);
 end
 
 % for i = (clnt_n + 1):(clnt_n + rtr_n)
@@ -442,7 +452,7 @@ plot_str = cell(1, rtr_level_n);
 
 for i = 2:(rtr_level_n - 1)
     
-    plot (1:1:content_n, hit_level(:,i)',  sprintf('o%s', colors(i)), 'LineWidth', 1);
+    plot (1:1:content_n, (hit_level(:,i))',  sprintf('o%s', colors(i)), 'LineWidth', 1);
     plot_obj(i) = plot(1:1:content_n, hit_level_reg(:,i)', sprintf('-%s', colors(i)), 'LineWidth', 1);
     plot_str{i} = sprintf('Level %d', i);
     
@@ -478,7 +488,7 @@ ylabel('Miss rate');
 
 for i = 2:(rtr_level_n - 1)
     
-    plot (1:1:content_n, miss_level(:,i)',  sprintf('o%s', colors(i)), 'LineWidth', 1);
+    plot (1:1:content_n, (miss_level(:,i))',  sprintf('o%s', colors(i)), 'LineWidth', 1);
     plot_obj(i) = plot(1:1:content_n, miss_level_reg(:,i)',  sprintf('-%s', colors(i)), 'LineWidth', 1);
     
 end
@@ -496,6 +506,9 @@ legend(plot_obj(2:(rtr_level_n - 1)), plot_str{2:(rtr_level_n - 1)});
 title(sprintf('Cache miss rate'));
 
 hold off;
+
+filename = sprintf('%s/6-3.fig', folder);
+saveas(gcf, filename);
 
 % 6.4) Caching time per content object, at different NDN router
 % levels (basically, the same procedures as those applied in 6.3 are used
@@ -538,5 +551,34 @@ legend(plot_obj(2:(rtr_level_n - 1)), plot_str{2:(rtr_level_n - 1)});
 title(sprintf('Relative time in CS'));
 
 hold off;
+
+filename = sprintf('%s/6-4.fig', folder);
+saveas(gcf, filename);
+
+% % 6.5) Number of Interest ‘hits’, per content object and network
+% % level (including srvr)
+% 
+% figure();
+% 
+% grid on;
+% hold on;
+% 
+% xlabel('Content index');
+% ylabel('# Interest hits');
+% 
+% %plot_obj = zeros(1, rtr_level_n);
+% 
+% for i = 2:(rtr_level_n)
+%         
+%     plot_obj(i) = plot(1:1:content_n, hit_level(:,i)', sprintf('-%s', colors(i)), 'LineWidth', 1);
+%     plot_str{i} = sprintf('Level %d', i);
+%     
+% end
+% 
+% legend(plot_obj(2:(rtr_level_n)), plot_str{2:(rtr_level_n)});
+% 
+% title(sprintf('Interest hits, per topology level'));
+% 
+% hold off;
 
 end

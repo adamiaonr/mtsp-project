@@ -39,20 +39,20 @@ $|N| = 10000$ for all experiment runs.\shortvertbreak
 We consider two types of topologies: (1) a cascade topology with $|L| = 5$ levels 
 ($|C| = 1$, $|R| = 1$ and $|S| = 1$), shown in Figure~\ref{fig:exp-setup-nettop-cascade}; (2) a binary 
 tree topology, also with $|L| = 5$ levels ($|C| = 8$, $|R| = 7$ and $|S| = 1$), as 
-shown in Figure~\ref{fig:exp-setup-nettop-tree}. The definition of `level' is straightforward and depicted 
+shown in Figure~\ref{fig:exp-setup-nettop-tree}. The definition of `topology level' is straightforward and depicted 
 in Figure~\ref{fig:exp-setup-nettop}.\shortvertbreak
 
 \begin{figure}[h!]
     \centering
     \subfigure[]{
-        %\includegraphics[width=0.40\textwidth] {figures/exp-setup-nettop-cascade.png}
-        \includegraphics[width=0.30\textwidth] {figures/fib-topo.png}
+        \includegraphics[width=0.30\textwidth] {figures/exp-setup-nettop-cascade.png}
+        %\includegraphics[width=0.30\textwidth] {figures/fib-topo.png}
         \label{fig:exp-setup-nettop-cascade}
     }
 
     \subfigure[]{
-        %\includegraphics[width=0.40\textwidth] {figures/exp-setup-nettop-tree.png}
-        \includegraphics[width=0.30\textwidth] {figures/fib-topo.png}
+        \includegraphics[width=0.45\textwidth] {figures/exp-setup-nettop-tree.png}
+        %\includegraphics[width=0.30\textwidth] {figures/fib-topo.png}
         \label{fig:exp-setup-nettop-tree}
     }
 
@@ -81,8 +81,8 @@ For all our experiments we collect and evaluate the following metrics:
 
     \item Total number of Interests and Data packets received\slash sent per network node\slash level;
     \item Cache hit\slash miss rate per content object and network level;
-    \item Number of Interest `hits', per content object and network level (including 
-        server(s) $S$);
+%    \item Number of Interest `hits', per content object and network level (including 
+%        server(s) $S$);
     \item Relative time spent at cache per content object.\shortvertbreak
 
 \end{enumerate}

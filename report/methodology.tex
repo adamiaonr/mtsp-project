@@ -1,8 +1,10 @@
 \section{Methodology}
 \label{sec:methodology}
 
-We now present a brief description of the NDN model (...) for this work. We 
-start (...).
+In this section we describe the considered NDN model in detail. We start with 
+an overview of the model, setting up the notation and crudely establishing its relation 
+with nonlinear dynamical systems, and then continue with the detailed description of 
+each model component.
 
 \subsection{Overview}
 \label{subsec:meth-overview}
@@ -285,7 +287,7 @@ we consider $|P| << |O|$.}.
 Again, we follow a binary encoding, using $(o, p) = 1$ to indicate the 
 presence of content $O_o$ at slot $P_p$, and $(o, p) = 0$ as an indication of 
 its absence. Each slot is assigned a different integer 
-index, i.e. $P_p$, with $p = \{1, 2, ..., |P|\}$, which express the idea of `levels': 
+index, i.e. $P_p$, with $p = \{1, 2, ..., |P|\}$, which express the idea of `cache levels': 
 $O_o$, occupying slot $P_2$, is at the 2\textsuperscript{nd} 
 (highest) position of the \textbf{CS}. $P_1$ is usually interpreted as the `highest' 
 level, and $P_{|P|}$ the `lowest', nevertheless the meaning is of the `levels' 
@@ -341,4 +343,10 @@ finally the servers $S_1$ and $S_2$.
     \label{eq:topo}
 \end{equation}\shortvertbreak
 
+\subsection{Implementation}
+\label{subsec:meth-impl}
 
+The NDN network model described above has been implemented in MATLAB\textsuperscript{\textregistered}, taking 
+advantage of its Object Oriented Programming (OOP) capabilities. The MATLAB\textsuperscript{\textregistered} 
+code --- along with additional documentation --- is freely available online 
+at \url{https://github.com/adamiaonr/mtsp-project}.

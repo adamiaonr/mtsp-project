@@ -28,8 +28,13 @@ In this paper, we focus on the analysis of cache behavior in NDN
 networks under different cache algorithms, network topologies and content 
 usage characteristics. To do so, we specify a simple and but modular NDN router 
 model, loosely inspired in nonlinear dynamical 
-systems~\cite{Hedrick2010}. We implement the specified model in MATLAB, providing 
-some simulation results with X simple cache algorithms, specifically (...).\shortvertbreak
+systems~\cite{Hedrick2010}. We implement the specified model in MATLAB\textsuperscript{\textregistered}, providing 
+some simulation results with three simple cache algorithms, specifically (1) Least Recently 
+Used (LRU), (2) More Recently Used (MRU) and (3) Random caching. The main contribution 
+of this work consists in the provision of a framework in MATLAB\textsuperscript{\textregistered}, 
+which allows for the simulation of NDN network behavior under different 
+topologies, cache algorithms, NDN router characteristics, etc. without 
+the complexity of more elaborated network simulators.\shortvertbreak
 
 The remainder of this paper is organized as follows. In Section~\ref{sec:ndn} we provide an 
 overview over the NDN architecture, focusing on the basic operation of its 
@@ -38,7 +43,7 @@ Section~\ref{sec:methodology}, we present the overall methodology followed
 during this work, including an explanation of the considered NDN router model, 
 network topologies to be considered, cache algorithms, etc. In 
 Section~\ref{sec:impl} we show details about the implementation of 
-such models in MATLAB. In Section~\ref{sec:experiments} we present a set of 
+such models in MATLAB\textsuperscript{\textregistered}. In Section~\ref{sec:experiments} we present a set of 
 experiments ran over our model implementation, as well as the respective 
 results. Finally, in Section~\ref{sec:conclusions} we draw some pertinent 
 conclusions from the presented work.
