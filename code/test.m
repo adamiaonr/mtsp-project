@@ -36,3 +36,5 @@ content_popularity = c ./ (k.^(alpha));
 
 %% 2) simulation rounds
 simulate(content_n, content_popularity, cs_size, 'LRU', round_n, topology, clnt_n, rtr_n, rtr_level, srvr_n);
+simulate(content_n, content_popularity, cs_size, 'RANDOM', round_n, topology, clnt_n, rtr_n, rtr_level, srvr_n);
+simulate(content_n, content_popularity, cs_size, 'MRU', round_n, topology, clnt_n, rtr_n, rtr_level, srvr_n);

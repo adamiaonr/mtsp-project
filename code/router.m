@@ -44,11 +44,19 @@ classdef router < node
 
                 obj.CS = lru_cache(content_n, cache_size);
 
-            else
+            elseif (strcmpi('MRU', cache_type))
 
+                obj.CS = mru_cache(content_n, cache_size);
+
+            elseif (strcmpi('RANDOM', cache_type))
+
+                obj.CS = random_cache(content_n, cache_size);
+
+            else
+                
                 % default is an 'LRU' cache
                 obj.CS = lru_cache(content_n, cache_size);
-
+                
             end
 
             % initialize the FIB

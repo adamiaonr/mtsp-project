@@ -1,5 +1,5 @@
-classdef lru_cache < cache
-    %LRU_CACHE Implements a cache ruled by a LRU policy.
+classdef mru_cache < cache
+    %MRU_CACHE Implements a cache ruled by a MRU policy.
     %   Detailed explanation goes here
     
     properties
@@ -15,7 +15,7 @@ classdef lru_cache < cache
     methods
         
         % class constructor
-        function obj = lru_cache(content_n, size)
+        function obj = mru_cache(content_n, size)
             
             if (nargin == 2)
             
@@ -83,7 +83,7 @@ classdef lru_cache < cache
             hits = cached & sum(inputs(1:obj.content_n, :), 2);
             obj.stats_hits((hits > 0)) = obj.stats_hits((hits > 0)) + 1;
             
-            % 3.2) according to LRU policy, reset the age of the cache hit,
+            % 3.2) according to MRU policy, reset the age of the cache hit,
             % increase the age of all others by +1
             obj.age = obj.age + 1;
             obj.age((hits > 0)) = 0;
@@ -103,23 +103,7 @@ classdef lru_cache < cache
             % the values given as inputs have already been checked for
             % existing PIT entries (with unsolicited Data packets
             % discarded).
-            
-            % LRU:
-            % given some (single) non-discarded Data signal input, we
-            % assume that it did so because a previous Interest signal has
-            % been forwarded upstream, due to a previous cache miss. In
-            % accordance, we check if there are free slots in the cache,
-            % set the appropriate (row, col) = 1. If the cache is
-            % full, we discard that with the highest value in obj.age, and
-            % evict it, i.e. (row, col) = 0. Then, assign the incoming Data
-            % signal to the slot which has just been freed.                        
-            % there is a catch though: as we receive Data signals in
-            % batches, which precludes a direct one-by-one evaluation of 
-            % the LRU element in the CS, we randomize the non-discarded 
-            % inputs, assigning them a pseudo-order of arrival. we then 
-            % use that pseudo order to evaluate which values are kept in 
-            % the cache or evicted.
-            
+                        
             % 1) 1-column array with arriving Data signals
             data = (sum(inputs((obj.content_n + 1):(2 * obj.content_n),:), 2) & 1);
             
@@ -139,7 +123,7 @@ classdef lru_cache < cache
             pseudo_order_idx = randperm(pseudo_order_n);            
             pseudo_order = pseudo_order(pseudo_order_idx);
             
-            % 3) apply the LRU algorithm, element-wise (according to the
+            % 3) apply the MRU algorithm, element-wise (according to the
             % contents of pseudo_order)
             
             % NOTE: it involves a 'for' cycle, that's horrible in Matlab,
@@ -162,8 +146,8 @@ classdef lru_cache < cache
                     if (cached_n >= obj.size)
 
                         % 3.2.1) cache the new Data value and evict the 
-                        % LRU value, according to the age matrix
-                        [sortedValues, sortIndex] = sort(obj.age, 'descend');
+                        % MRU value, according to the age matrix
+                        [sortedValues, sortIndex] = sort(obj.age, 'ascend');
                         
                         % 3.2.2) determine the sorted indexes which also
                         % happen to be cached
@@ -202,4 +186,3 @@ classdef lru_cache < cache
     end
     
 end
-
