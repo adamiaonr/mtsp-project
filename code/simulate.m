@@ -1,5 +1,5 @@
 function [] = simulate(content_n, content_popularity, cs_size, cs_type, round_n, topology, clnt_n, rtr_n, rtr_level, srvr_n, figure_dir)
-%UNTITLED Summary of this function goes here
+%SIMULATE Executes a simulation run 
 %   Detailed explanation goes here
 
 %% pre-round phase (setup clients, server, routers, topology, etc.)

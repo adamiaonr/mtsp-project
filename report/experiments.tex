@@ -27,7 +27,7 @@ each content object $O_o$, with $o = \{1,2,...,|O|\}$, is requested by a client
 $C$ with probability $q_{o} = \frac{c}{o^{\alpha}}$, with $c = 0.8$ and 
 $\alpha = \{0.5, 1, 2\}$.\shortvertbreak
 
-At each experiment round (see Section~\ref{sec:impl} for more details on 
+At each experiment round (see Section~\ref{subsec:meth-conn-dots} for more details on 
 rounds), each client $C$ generates a signal for content object $O_o$ with 
 probability $q_{o}$. We consider a number of rounds 
 $|N| = 10000$ for all experiment runs.\shortvertbreak
@@ -56,7 +56,7 @@ in Figure~\ref{fig:exp-setup-nettop}.\shortvertbreak
     }
 
     \cprotect\caption{Graphical depiction of the topologies considered for 
-        our experiments: (a) cascade topology ($|L| = 5$, $|C| = 1$, $|R| = 1$ 
+        our experiments: (a) cascade topology ($|L| = 5$, $|C| = 1$, $|R| = 3$ 
         and $|S| = 1$); (b) binary tree topology 
         ($|L| = 5$, $|C| = 8$, $|R| = 7$ and $|S| = 1$).}
     \label{fig:exp-setup-nettop}
@@ -68,7 +68,7 @@ in Figure~\ref{fig:exp-setup-nettop}.\shortvertbreak
 
 We evaluate the performance of our model under three different types of cache 
 algorithms, already described in Section~\ref{subsec:meth-caching-algs}: (1) 
-Least Recently Used (LRU); (2) More Recently Used (MRU); and (3) Random. We 
+Least Recently Used (LRU); (2) More Recently Used (MRU); and (3) Random caching. We 
 consider different cache sizes, specifically $|P| = \{10, 25, 50, 75\}$.\shortvertbreak
 
 \subsubsection{Metrics}
@@ -109,5 +109,87 @@ the ratio vs. the total number of simulation rounds.
 
 Here we present a selection of experimental results, following the metrics 
 introduced in Section~\ref{subsec:exp-setup}\footnote{A complete collection of 
-results can be found in~\url{github.com/adamiaonr/mtsp-project}.}.
+results can be found in~\url{github.com/adamiaonr/mtsp-project/tree/master/report/figures/experiments}.}. 
+The captions on the figures mention the respective experimental parameters.\shortvertbreak
+
+%\subsubsection{Network Topologies}
+%\label{subsec:exp-results-topologies}
+
+\begin{figure}[h!]
+    \centering
+    \subfigure[]{
+        \includegraphics[width=0.30\textwidth] {figures/experiments/cascade/LRU/25/6-2.png}
+        %\includegraphics[width=0.30\textwidth] {figures/fib-topo.png}
+        \label{fig:exp-results-topologies-cascade}
+    }
+
+    \subfigure[]{
+        \includegraphics[width=0.30\textwidth] {figures/experiments/tree/LRU/25/6-2.png}
+        %\includegraphics[width=0.30\textwidth] {figures/fib-topo.png}
+        \label{fig:exp-results-topologies-tree}
+    }
+
+    \cprotect\caption{Number of Interests\slash Data packets sent\slash received 
+        per topology level, for different topologies: cascade (a), binary tree (b). 
+        $|P| = 25$, $\alpha = 1$, LRU caching.}
+    \label{fig:exp-results-topologies}
+
+\end{figure}
+
+%\subsubsection{Cache Algorithms}
+%\label{subsec:exp-results-cache-alg}
+
+\begin{figure}[h!]
+    \centering
+    \subfigure[]{
+        \includegraphics[width=0.30\textwidth] {figures/experiments/cascade/LRU/25/6-3.png}
+        %\includegraphics[width=0.30\textwidth] {figures/fib-topo.png}
+        \label{fig:exp-results-cache-alg-cascade-lru}
+    }
+
+    \subfigure[]{
+        \includegraphics[width=0.30\textwidth] {figures/experiments/cascade/MRU/25/6-3.png}
+        %\includegraphics[width=0.30\textwidth] {figures/fib-topo.png}
+        \label{fig:exp-results-cache-alg-cascade-mru}
+    }
+
+    \subfigure[]{
+        \includegraphics[width=0.30\textwidth] {figures/experiments/cascade/RANDOM/25/6-3.png}
+        %\includegraphics[width=0.30\textwidth] {figures/fib-topo.png}
+        \label{fig:exp-results-cache-alg-cascade-random}
+    }
+
+    \cprotect\caption{Cache hit\slash miss rates for different cache algorithms: LRU (a), MRU (b) 
+        and Random caching (c). Cascade topology, $|L| = 5$, $|C| = 8$, 
+        $|R| = 7$ and $|S| = 1$, $|P| = 25$, $\alpha = 1$.}
+    \label{fig:exp-results-cache-alg-cascade}
+
+\end{figure}
+
+\begin{figure}[h!]
+    \centering
+    \subfigure[]{
+        \includegraphics[width=0.30\textwidth] {figures/experiments/tree/LRU/25/6-3.png}
+        %\includegraphics[width=0.30\textwidth] {figures/fib-topo.png}
+        \label{fig:exp-results-cache-alg-lru}
+    }
+
+    \subfigure[]{
+        \includegraphics[width=0.30\textwidth] {figures/experiments/tree/MRU/25/6-3.png}
+        %\includegraphics[width=0.30\textwidth] {figures/fib-topo.png}
+        \label{fig:exp-results-cache-alg-mru}
+    }
+
+    \subfigure[]{
+        \includegraphics[width=0.30\textwidth] {figures/experiments/tree/RANDOM/25/6-3.png}
+        %\includegraphics[width=0.30\textwidth] {figures/fib-topo.png}
+        \label{fig:exp-results-cache-alg-random}
+    }
+
+    \cprotect\caption{Cache hit\slash miss rates for different cache algorithms: LRU (a), MRU (b) 
+        and Random caching (c). Binary tree topology, $|L| = 5$, $|C| = 8$, 
+        $|R| = 7$ and $|S| = 1$, $|P| = 25$, $\alpha = 1$.}
+    \label{fig:exp-results-cache-alg}
+
+\end{figure}
 
