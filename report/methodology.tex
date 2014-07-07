@@ -130,16 +130,17 @@ packets of
 type $O_o$ have been previously requested via interface $F_f$, and so Data 
 packets $d_{O_o}$ shall be forwarded via $F_f$; on the other hand, 
 if $(o,f) = 0$, $d_{O_o}$ should not be forwarded via that 
-interface. These operations influence the composition of the \textbf{PIT} over time, whose 
-maintenance can be summarized by the two simple routines shown below, to be 
-followed upon Interest and Data packet arrivals, respectively. For the algorithms shown 
-below, we consider a special $2\,|O| \times |F|$ matrix \textbf{A}, corresponding to the concatenation of 
+interface. The arrival of Interest and Data packets influences the composition of 
+the PIT over time, each triggering a special routine --- \textbf{PIT::updateOnInterest()} and 
+\textbf{PIT::updateOnData()}, respectively --- shown below. We consider a 
+special $2\,|O| \times |F|$ matrix \textbf{A}, corresponding to the concatenation of 
 all the arrays $\textbf{u}_{r,f,in}$ as columns, i.e. the contents from the input ports 
 of all the interfaces $F_f$, at some router $R_r$:
 
 \begin{equation}
 \textbf{A} = \begin{bmatrix} \textbf{u}_{r,1,in} & \textbf{u}_{r,2,in} & ... & \textbf{u}_{r,|F|,in} \end{bmatrix}
     \label{eq:a}
+%\end{equation}\shortvertbreak
 \end{equation}\shortvertbreak
 
 \begin{algorithmic}[1]
@@ -192,14 +193,14 @@ interfaces.\shortvertbreak
 
 \end{algorithmic}\shortvertbreak
 
-With the explanation given above for the \textbf{updateOnInterest()} routine, 
-the understanding of \textbf{updateOnData()} is left to the reader. Note that 
-the objective of this last routine is the reverse operation of \textbf{updateOnInterest()}, i.e. forwarding Data 
+%With the explanation given above for the \textbf{PIT::updateOnInterest()} routine, 
+%the understanding of \textbf{PIT::updateOnData()} is left to the reader. 
+Note that 
+the objective of PIT::updateOnData() is the reverse operation of PIT::updateOnInterest(), i.e. forwarding Data 
 packets over the interfaces for which there is a registered Interest in the \textbf{PIT}, whit 
-the result encoded in matrix $\textbf{E}$. Also 
-note that $\textbf{G}$ consists in a $|O| \times |F|$ matrix, which expands the single-column 
+the result encoded in matrix $\textbf{E}$. $\textbf{G}$ consists in a $|O| \times |F|$ matrix, which expands the single-column 
 vector $\textbf{A}' \times \textbf{1}^{|F|}$ to $|F|$ columns (line 4), making it ready 
-for the subsequent AND (`\&') operations (lines 5 and 6); and that the final 
+for the subsequent AND (`\&') operations (lines 5 and 6). The final 
 step of the operation (line 6) consists in erasing 
 all Interest registrations which have been successfully attended.\shortvertbreak
 
@@ -227,8 +228,7 @@ $i_{O_o}$ shall be forwarded via $F_f$; on the other hand,
 if $(o,f) = 0$, $i_{O_o}$ should not be forwarded via that interface. 
 Following the same type of operations described for the PIT 
 in Section~\ref{subsec:meth-pit}, we now present the algorithm followed by NDN 
-routers to forward Interest signals, which uses the PIT's 
-\textbf{updateOnInterest()} operation (as well as a similar procedure, but 
+routers to forward Interest signals, which uses PIT::updateOnInterest() (as well as \textbf{CS::updateOnInterest()}, a similar procedure, but 
 related to the CS, explained in Sections~\ref{subsec:meth-cs} and 
 \ref{subsec:meth-caching-algs}):\shortvertbreak 
 
@@ -245,7 +245,7 @@ related to the CS, explained in Sections~\ref{subsec:meth-cs} and
 
 \end{algorithmic}\shortvertbreak
 
-The last operation of the \textbf{forwardInterests()} routine (line 6) refers to 
+The last operation of \textbf{Router::forwardInterests()} (line 6) refers to 
 the (parallelized) `filling' of the output ports of all the interfaces $F$ of router $R_r$.\shortvertbreak
 
 In our model, the composition of the \textbf{FIB} is established at an initial phase, 
@@ -293,7 +293,7 @@ $O_o$, occupying slot $P_2$, is at the 2\textsuperscript{nd}
 level, and $P_{|P|}$ the `lowest', nevertheless the meaning is of the `levels' 
 is often dependent on the cache algorithm implemented by the CS. In fact, we 
 model a CS as having a general behavior (presented in this section), and a specific 
-behavior, which depends on the cache algorithm the CS implements. We discuss caching 
+behavior, which depends on the cache algorithm the CS implements. We discuss cache 
 algorithms in Section~\ref{subsec:meth-caching-algs}.\shortvertbreak
 
 Note that \textbf{CS} must obey a set of constraints, since (1) 
@@ -317,8 +317,8 @@ conditions for the validity of \textbf{CS} are:
 \subsection{Cache Algorithms}
 \label{subsec:meth-caching-algs}
 
-\subsection{`Connecting the Dots'}
-\label{subsec:meth-conn-dots}
+\subsection{Network Topologies}
+\label{subsec:meth-topologies}
 
 We represent a network topology using a square matrix \textbf{T}, 
 with dimension $|R|+|C|+|S|$. For representation purposes, we attribute an 
@@ -343,10 +343,15 @@ finally the servers $S_1$ and $S_2$.
     \label{eq:topo}
 \end{equation}\shortvertbreak
 
+\subsection{`Connecting the Dots'}
+\label{subsec:meth-conn-dots}
+
+
+
 \subsection{Implementation}
 \label{subsec:meth-impl}
 
 The NDN network model described above has been implemented in MATLAB\textsuperscript{\textregistered}, taking 
 advantage of its Object Oriented Programming (OOP) capabilities. The MATLAB\textsuperscript{\textregistered} 
-code --- along with additional documentation --- is freely available online 
-at \url{https://github.com/adamiaonr/mtsp-project}.
+code --- along with additional documentation --- is freely available 
+at \url{github.com/adamiaonr/mtsp-project}.

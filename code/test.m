@@ -39,13 +39,13 @@ content_popularity = c ./ (k.^(alpha));
 
 %% 1.2) simulation rounds
 
-for j = 1:numel(cs_size)
-
-    simulate(content_n, content_popularity, cs_size(j), 'LRU', round_n, topology, clnt_n, rtr_n, rtr_level, srvr_n, figure_dir_cascade);
-    simulate(content_n, content_popularity, cs_size(j), 'MRU', round_n, topology, clnt_n, rtr_n, rtr_level, srvr_n, figure_dir_cascade);
-    simulate(content_n, content_popularity, cs_size(j), 'RANDOM', round_n, topology, clnt_n, rtr_n, rtr_level, srvr_n, figure_dir_cascade);
-    
-end
+% for j = 1:numel(cs_size)
+% 
+%     simulate(content_n, content_popularity, cs_size(j), 'LRU', round_n, topology, clnt_n, rtr_n, rtr_level, srvr_n, figure_dir_cascade);
+%     simulate(content_n, content_popularity, cs_size(j), 'MRU', round_n, topology, clnt_n, rtr_n, rtr_level, srvr_n, figure_dir_cascade);
+%     simulate(content_n, content_popularity, cs_size(j), 'RANDOM', round_n, topology, clnt_n, rtr_n, rtr_level, srvr_n, figure_dir_cascade);
+%     
+% end
 
 %% 2.1) overall simulation parameters (tree topology)
 
