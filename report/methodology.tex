@@ -2,9 +2,9 @@
 \label{sec:methodology}
 
 In this section we describe the proposed NDN model in detail. We start with 
-an overview of the model, setting up the notation and crudely establishing its relation 
-with nonlinear dynamical systems. We then continue with the detailed description of 
-each model component and related procedures.
+an overview, setting the notation and crudely establishing its relation 
+with nonlinear dynamical systems. We then continue with a detailed description 
+of each model component and related procedures.
 
 \subsection{Overview}
 \label{subsec:meth-overview}
@@ -86,7 +86,7 @@ signals are randomly generated):
 \end{equation}%\shortvertbreak
 
 In the next subsections, we describe each one of the nonlinear subsystems in 
-detail, including the nature of the types of state and nonlinear 
+detail, including the nature of the types of state and their nonlinear 
 dynamics.
 
 \subsection{NDN Router Model}
@@ -140,10 +140,8 @@ network topologies.\shortvertbreak
 In the same way that the FIB commands the forwarding of Interests, the PIT 
 commands the forwarding of Data packets. Nevertheless, the composition of the 
 PIT is more dynamic than that of the FIB, being dependent on the flow of 
-Interest and Data packets through the NDN router.\shortvertbreak
-
-Similarly to the FIB, we model the PIT as a $|O| \times |F|$ matrix in the 
-form
+Interest and Data packets through the NDN router. We model the PIT as a 
+$|O| \times |F|$ matrix in the form:
 
 \begin{equation}
 \textbf{PIT} = \begin{bmatrix} 1 & 0 & 0 & 0  \\ 
@@ -163,7 +161,7 @@ packets $d_{O_o}$ shall be forwarded via $F_f$; on the other hand,
 if $(o,f) = 0$, $d_{O_o}$ should not be forwarded via that 
 interface. The arrival of Interest and Data packets influences the composition of 
 the PIT over time, each triggering special routines --- \textbf{PIT::updateOnInterest()} and 
-\textbf{PIT::updateOnData()}, respectively --- shown below. We consider 
+\textbf{PIT::updateOnData()} --- shown below. We consider 
 special $2\,|O| \times |F|$ matrices \textbf{U} and \textbf{Y}, corresponding to the concatenation of 
 all the column vectors $\textbf{u}_{r,f}$ and $\textbf{y}_{r,f}$, i.e. the contents from the input and output ports 
 of all the interfaces $F_f$, at some router $R_r$:
@@ -241,6 +239,79 @@ for the subsequent AND (`\&') operations (lines 5 and 6). The final
 step of the operation (line 6) consists in erasing 
 all Interest registrations which have been successfully attended.\shortvertbreak
 
+As a final remark, we can now identify the \textbf{PIT} as one form of state 
+\textbf{x}, which is driven by the nonlinear dynamics specified on the 
+PIT::updateOnInterest() and PIT::updateOnData() routines (lines 5 and 6, respectively). 
+Furthermore, both routines also contribute to the generation of outputs, 
+in the form of matrices $\textbf{Y}_d$ and $\textbf{Y}'_i$.\shortvertbreak
+
+\subsubsection{Content Store (CS)}
+\label{subsec:meth-cs}
+
+We model the Content Store (CS), i.e. the NDN router's cache, as an $|O| 
+\times |P|$ matrix, in which $|P|$ is the size of the CS, i.e. maximum 
+number of content objects it is able to accommodate at any given point in time. 
+We use $P$ to represent a position or slot in the CS, which is able to hold a single 
+content object $O_o$ (here we do not consider a notion of content object size, 
+an object always fits in a slot $P$). E.g. in~\ref{eq:cs} we show the encoding 
+of the \textbf{CS} for $R_1$ in Figure~\ref{fig:fib-topo}, with $|P| = 2$, 
+which is shown to contain content objects $O_2$ and $O_4$\footnote{Usually, 
+we consider $|P| << |O|$.}.
+
+\begin{equation}
+\textbf{CS} = \begin{bmatrix} 0 & 0             \\ 
+                1 & 0                           \\ 
+                0 & 1                           \\ 
+                0 & 0                           \\ \end{bmatrix}
+    \label{eq:cs}
+\end{equation}\shortvertbreak
+
+Again, we follow a binary encoding, using $(o, p) = 1$ to indicate the 
+presence of content $O_o$ at slot $P_p$, and $(o, p) = 0$ as an indication of 
+its absence. Each slot is assigned a different integer 
+index, i.e. $P_p$, with $p = \{1, 2, ..., |P|\}$, which express the idea of `cache levels': 
+$O_o$, occupying slot $P_2$, is at the 2\textsuperscript{nd} 
+(highest) position of the \textbf{CS}. $P_1$ is usually interpreted as the `highest' 
+level, and $P_{|P|}$ the `lowest', nevertheless the meaning is of the `levels' 
+is often dependent on the cache algorithm implemented by the CS.\shortvertbreak
+%In fact, we 
+%model a CS as having a general behavior (presented in this section), and a specific 
+%behavior, which depends on the cache algorithm the CS implements. We discuss cache 
+%algorithms in Section~\ref{subsec:meth-caching-algs}.\shortvertbreak
+
+Note that \textbf{CS} must obey a set of constraints, since (1) 
+each slot can only hold a single content object, and (2) it is inefficient for 
+the \textbf{CS} to hold multiple copies of a content $O_o$. Specifically, the 
+conditions for the validity of \textbf{CS} are:
+
+\begin{equation}
+    \sum_{o=1}^{|O|} \textbf{CS}_{o,p} \le 1 \quad \forall \ p \in {1, 2, ..., |P|}
+    \label{eq:cs-constraints-1}
+\end{equation}
+
+\begin{equation}
+    \sum_{p=1}^{|P|} \textbf{CS}_{o,p} \le 1 \quad \forall \ o \in {1, 2, ..., |O|}
+    \label{eq:cs-constraints-2}
+\end{equation}
+
+Similarly to the PIT, the operations related to the CS are implemented by two 
+routines: \textbf{CS::updateOnInterest()} and \textbf{CS::updateOnData()}. While 
+the behavior of CS::updateOnData() is specific to a particular cache 
+algorithm (see Section~\ref{subsec:meth-caching-algs}), that of CS::updateOnInterest() 
+is rather general, consisting in the generation of a pair of $|O| \times |F|$ 
+matrices, $[\textbf{Y}_h, \textbf{R}]$. In short, $\textbf{Y}_h$ encodes 
+the Data packets for which there are cache hits, already assigned to the 
+appropriate interface columns; and $\textbf{R}$ encodes all the Interest signals 
+for which there were no cache hits\footnote{Due to space constraints, we do not 
+show the algorithm of CS::updateOnInterest(), which can nevertheless be 
+consulted in \url{github.com/adamiaonr/mtsp-project}.}.\shortvertbreak
+
+Again, \textbf{CS} may be seen as the other form of state in the NDN router 
+subsystem, driven by the nonlinear dynamics specified by each different 
+cache algorithm. Furthermore, the CS::updateOnInterest() 
+routine, common to all caching policies, contributes to the generation of the 
+output matrix \textbf{Y} via $\textbf{Y}_h$.\shortvertbreak
+
 \subsubsection{Forwarding Information Base (FIB)}
 \label{subsec:meth-fib}
 
@@ -265,9 +336,8 @@ $i_{O_o}$ shall be forwarded via $F_f$; on the other hand,
 if $(o,f) = 0$, $i_{O_o}$ should not be forwarded via that interface. 
 Following the same type of operations described for the PIT 
 in Section~\ref{subsec:meth-pit}, we now present the algorithm followed by NDN 
-routers to forward Interest signals, which uses PIT::updateOnInterest() (as well as \textbf{CS::updateOnInterest()}, a similar procedure, but 
-related to the CS, explained in Sections~\ref{subsec:meth-cs} and 
-\ref{subsec:meth-caching-algs}):\shortvertbreak 
+routers to forward Interest signals, which uses PIT::updateOnInterest() as well 
+as CS::updateOnInterest():\shortvertbreak 
 
 \begin{algorithmic}[1]
 
@@ -299,7 +369,7 @@ In our model, the composition of the \textbf{FIB} is established at an initial p
 not suffering any further alterations (more details in 
 Section~\ref{subsec:meth-conn-dots}). Note 
 that the FIB only commands Interest forwarding actions, not participating in the 
-forwarding of Data packets.\shortvertbreak
+forwarding of Data packets.
 
 \begin{figure}[h!]
 
@@ -309,54 +379,6 @@ forwarding of Data packets.\shortvertbreak
     \label{fig:fib-topo}
 
 \end{figure}
-
-\subsubsection{Content Store (CS)}
-\label{subsec:meth-cs}
-
-We model the Content Store (CS), i.e. the NDN router's cache, as an $|O| 
-\times |P|$ matrix, in which $|P|$ is the size of the CS, i.e. maximum 
-number of content objects it is able to accommodate at any given point in time. 
-We use $P$ to represent a position or slot in the CS, which is able to hold a single 
-content object $O_o$ (here we do not consider a notion of content object size, 
-an object always fits in a slot $P$). E.g. in~\ref{eq:cs} we show the encoding 
-of the \textbf{CS} for $R_1$ in Figure~\ref{fig:fib-topo}, with $|P| = 2$, 
-which is shown to contain content objects $O_2$ and $O_4$\footnote{Usually, 
-we consider $|P| << |O|$.}.
-
-\begin{equation}
-\textbf{CS} = \begin{bmatrix} 0 & 0             \\ 
-                1 & 0                           \\ 
-                0 & 1                           \\ 
-                0 & 0                           \\ \end{bmatrix}
-    \label{eq:cs}
-\end{equation}\shortvertbreak
-
-Again, we follow a binary encoding, using $(o, p) = 1$ to indicate the 
-presence of content $O_o$ at slot $P_p$, and $(o, p) = 0$ as an indication of 
-its absence. Each slot is assigned a different integer 
-index, i.e. $P_p$, with $p = \{1, 2, ..., |P|\}$, which express the idea of `cache levels': 
-$O_o$, occupying slot $P_2$, is at the 2\textsuperscript{nd} 
-(highest) position of the \textbf{CS}. $P_1$ is usually interpreted as the `highest' 
-level, and $P_{|P|}$ the `lowest', nevertheless the meaning is of the `levels' 
-is often dependent on the cache algorithm implemented by the CS. In fact, we 
-model a CS as having a general behavior (presented in this section), and a specific 
-behavior, which depends on the cache algorithm the CS implements. We discuss cache 
-algorithms in Section~\ref{subsec:meth-caching-algs}.\shortvertbreak
-
-Note that \textbf{CS} must obey a set of constraints, since (1) 
-each slot can only hold a single content object, and (2) it is inefficient for 
-the \textbf{CS} to hold multiple copies of a content $O_o$. Specifically, the 
-conditions for the validity of \textbf{CS} are:
-
-\begin{equation}
-    \sum_{o=1}^{|O|} \textbf{CS}_{o,p} \le 1 \quad \forall \ p \in {1, 2, ..., |P|}
-    \label{eq:cs-constraints-1}
-\end{equation}
-
-\begin{equation}
-    \sum_{p=1}^{|P|} \textbf{CS}_{o,p} \le 1 \quad \forall \ o \in {1, 2, ..., |O|}
-    \label{eq:cs-constraints-2}
-\end{equation}
 
 \subsection{Endpoints}
 \label{subsec:meth-endpoints}
@@ -399,6 +421,10 @@ finally the servers $S_1$ and $S_2$.
 \label{subsec:meth-impl}
 
 The NDN network model described above has been implemented in MATLAB\textsuperscript{\textregistered}, taking 
-advantage of its Object Oriented Programming (OOP) capabilities. The MATLAB\textsuperscript{\textregistered} 
+advantage of its Object Oriented Programming (OOP) capabilities. Most of 
+the object types are independent of particular cache algorithms, nevertheless 
+CS objects are defined as abstract classes, allowing for specific 
+implementations of cache policies such as LRU, MRU and Random caching. The 
+MATLAB\textsuperscript{\textregistered} 
 code --- along with additional documentation --- is freely available 
 at \url{github.com/adamiaonr/mtsp-project}.

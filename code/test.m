@@ -10,11 +10,12 @@ figure_dir_tree = '/home/adamiaonr/Dropbox/Workbench/PhD/mtsp/project/report/fig
 content_n = 100;
 
 % 1.1.2) CS size (i.e. number of slots)
-cs_size = [10 25 50 75];
+%cs_size = [10 25 50 75];
+cs_size = [50];
 
 % 1.1.3) number of simulation rounds (i.e. 'generate signals' -> 'fetch
 % inputs' -> process inputs -> set outputs cycles)
-round_n = 10000;
+round_n = 1000;
 
 % 1.1.4) specify the topology matrix (commented case is a cascade 
 % topology, 1 client, 3 levels - i.e. NDN routers - and 1 server).
@@ -39,13 +40,13 @@ content_popularity = c ./ (k.^(alpha));
 
 %% 1.2) simulation rounds
 
-% for j = 1:numel(cs_size)
-% 
-%     simulate(content_n, content_popularity, cs_size(j), 'LRU', round_n, topology, clnt_n, rtr_n, rtr_level, srvr_n, figure_dir_cascade);
-%     simulate(content_n, content_popularity, cs_size(j), 'MRU', round_n, topology, clnt_n, rtr_n, rtr_level, srvr_n, figure_dir_cascade);
-%     simulate(content_n, content_popularity, cs_size(j), 'RANDOM', round_n, topology, clnt_n, rtr_n, rtr_level, srvr_n, figure_dir_cascade);
-%     
-% end
+for j = 1:numel(cs_size)
+
+    simulate(content_n, content_popularity, cs_size(j), 'LRU', round_n, topology, clnt_n, rtr_n, rtr_level, srvr_n, figure_dir_cascade);
+    %simulate(content_n, content_popularity, cs_size(j), 'MRU', round_n, topology, clnt_n, rtr_n, rtr_level, srvr_n, figure_dir_cascade);
+    %simulate(content_n, content_popularity, cs_size(j), 'RANDOM', round_n, topology, clnt_n, rtr_n, rtr_level, srvr_n, figure_dir_cascade);
+    
+end
 
 %% 2.1) overall simulation parameters (tree topology)
 
@@ -105,10 +106,10 @@ rtr_level = [
 
 %% 2.2) simulation rounds
 
-for j = 1:numel(cs_size)
-
-    simulate(content_n, content_popularity, cs_size(j), 'LRU', round_n, topology, clnt_n, rtr_n, rtr_level, srvr_n, figure_dir_tree);
-    simulate(content_n, content_popularity, cs_size(j), 'MRU', round_n, topology, clnt_n, rtr_n, rtr_level, srvr_n, figure_dir_tree);
-    simulate(content_n, content_popularity, cs_size(j), 'RANDOM', round_n, topology, clnt_n, rtr_n, rtr_level, srvr_n, figure_dir_tree);
-    
-end
+% for j = 1:numel(cs_size)
+% 
+%     simulate(content_n, content_popularity, cs_size(j), 'LRU', round_n, topology, clnt_n, rtr_n, rtr_level, srvr_n, figure_dir_tree);
+%     simulate(content_n, content_popularity, cs_size(j), 'MRU', round_n, topology, clnt_n, rtr_n, rtr_level, srvr_n, figure_dir_tree);
+%     simulate(content_n, content_popularity, cs_size(j), 'RANDOM', round_n, topology, clnt_n, rtr_n, rtr_level, srvr_n, figure_dir_tree);
+%     
+% end

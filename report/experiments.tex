@@ -25,7 +25,7 @@ For all experiments we consider a content object space of
 $|O| = 100$, with decreasing popularity and following a Zipf distribution: 
 each content object $O_o$, with $o = \{1,2,...,|O|\}$, is requested by a client 
 $C$ with probability $q_{o} = \frac{c}{o^{\alpha}}$, with $c = 0.8$ and 
-$\alpha = \{0.5, 1, 2\}$.\shortvertbreak
+$\alpha \in \{0.5, 1, 2\}$.\shortvertbreak
 
 At each experiment round (see Section~\ref{subsec:meth-conn-dots} for more details on 
 rounds), each client $C$ generates a signal for content object $O_o$ with 
@@ -38,8 +38,7 @@ $|N| = 10000$ for all experiment runs.\shortvertbreak
 We consider two types of topologies: (1) a cascade topology with $|L| = 5$ levels 
 ($|C| = 1$, $|R| = 1$ and $|S| = 1$), shown in Figure~\ref{fig:exp-setup-nettop-cascade}; (2) a binary 
 tree topology, also with $|L| = 5$ levels ($|C| = 8$, $|R| = 7$ and $|S| = 1$), as 
-shown in Figure~\ref{fig:exp-setup-nettop-tree}. The definition of `topology level' is straightforward and depicted 
-in Figure~\ref{fig:exp-setup-nettop}.\shortvertbreak
+shown in Figure~\ref{fig:exp-setup-nettop-tree}.\shortvertbreak
 
 \begin{figure}[h!]
     \centering
@@ -63,6 +62,20 @@ in Figure~\ref{fig:exp-setup-nettop}.\shortvertbreak
 
 \end{figure}
 
+The definition of `topology level' is straightforward and depicted 
+in Figure~\ref{fig:exp-setup-nettop}. Furthermore, we set the FIBs of every 
+NDN router to forward Interests over the upstream interfaces, i.e. $F_{r,2}$, 
+resulting in the form:
+
+\begin{equation}
+\textbf{FIB} = \begin{bmatrix} 
+                0 & 1 & 0 & ... & 0                 \\ 
+                0 & 1 & 0 & ... & 0                 \\ 
+                ... & ... & ... & ... & ...         \\ 
+                0 & 1 & 0 & ... & 0                 \\ \end{bmatrix}
+    \label{eq:fib-exp}
+\end{equation}\shortvertbreak
+
 \subsubsection{Cache Characteristics}
 \label{subsec:exp-setup-cache}
 
@@ -80,8 +93,8 @@ For all our experiments we collect and evaluate the following metrics:
 
     \item Total number of Interests and Data packets received\slash sent per network node\slash level;
     \item Cache hit\slash miss rate per content object and network level;
-%    \item Number of Interest `hits', per content object and network level (including 
-%        server(s) $S$);
+    \item Ratio of received Interests to original requests, per content object 
+        and network level (including server(s) $S$);
     \item Relative time spent at cache per content object.\shortvertbreak
 
 \end{enumerate}

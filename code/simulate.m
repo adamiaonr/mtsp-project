@@ -278,6 +278,7 @@ grid on;
 hold on;
 
 axis([1 (clnt_n + rtr_n + srvr_n) 0 (1.05 * max([max(isent) max(ircvd)]))]);
+axis square;
 
 xlabel('Node index');
 ylabel('# of Interests');
@@ -297,6 +298,7 @@ grid on;
 hold on;
 
 axis([1 (clnt_n + rtr_n + srvr_n) 0 (1.05 * max([max(dsent) max(drcvd)]))]);
+axis square;
 
 xlabel('Node index');
 ylabel('# of Data packets');
@@ -348,7 +350,8 @@ subplot(1, 2, 1);
 grid on;
 hold on;
 
-axis([1 (rtr_level_n) 0 (1.05 * max([max(isent) max(ircvd) max(dsent) max(drcvd)]))]);
+axis([1 (rtr_level_n) 0 (1.05 * max([max(isent) max(ircvd)]))]);
+axis square;
 
 xlabel('Topology level');
 ylabel('# of Interests');
@@ -366,6 +369,9 @@ subplot(1, 2, 2);
 
 grid on;
 hold on;
+
+axis([1 (rtr_level_n) 0 (1.05 * max([max(dsent) max(drcvd)]))]);
+axis square;
 
 xlabel('Topology level');
 ylabel('# of Data packets');
@@ -441,6 +447,7 @@ hold on;
 
 % 6.3.2.1) apparently, this is important
 axis([0 content_n 0 1]);
+axis square;
 
 xlabel('Content index');
 ylabel('Hit rate');
@@ -480,6 +487,7 @@ grid on;
 hold on;
 
 axis([0 content_n 0 1]);
+axis square;
 
 xlabel('Content index');
 ylabel('Miss rate');
@@ -533,6 +541,8 @@ figure();
 
 grid on;
 hold on;
+
+axis square;
 
 xlabel('Content index');
 ylabel('Relative time');
