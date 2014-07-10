@@ -383,6 +383,31 @@ forwarding of Data packets.
 \subsection{Endpoints}
 \label{subsec:meth-endpoints}
 
+In our model we consider two forms of endpoints: clients $C$ and servers $S$. 
+Clients generate Interests for content, i.e. vectors in the form of \textbf{v} 
+in~\ref{eq:signal}, while servers hold caches in which content objects persist 
+and are always available.\shortvertbreak
+
+The operation of servers is simple, basically consisting in mirroring the 
+Interest signals received as input, according to the contents of their 
+persistent CS:\shortvertbreak
+
+\begin{algorithmic}[1]
+
+\State \textbf{define} Server::mirror(\textbf{U}):
+\State
+    \State $\textbf{U}' \leftarrow \textbf{CS} \ \& \ \textbf{U}$ 
+    \State
+    \State $\textbf{Y}_h \leftarrow \begin{bmatrix} \textbf{0}^{|O|} \times {\textbf{1}^{|F|}}^{T} \\ \textbf{U}'(1:|O|,:) \end{bmatrix}$ 
+    \State
+    \State $F_{n,1:|F|,out} \leftarrow \textbf{Y}_h$
+
+\end{algorithmic}\shortvertbreak
+
+Clients generate Interest signals in a probabilistic fashion, e.g. according 
+to some popularity distribution such as Zipf~\cite{6038471}. In our model, 
+clients $C$ take (...).
+
 \subsection{Cache Algorithms}
 \label{subsec:meth-caching-algs}
 
