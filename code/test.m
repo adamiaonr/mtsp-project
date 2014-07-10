@@ -1,4 +1,6 @@
 addpath('~/Workbench/mtsp-project/code/utils/')
+addpath('~/Workbench/mtsp-project/code/utils/subaxis')
+addpath('~/Workbench/mtsp-project/code/utils/subtightplot')
 
 % figure directories
 figure_dir_cascade = '/home/adamiaonr/Dropbox/Workbench/PhD/mtsp/project/report/figures/experiments/cascade';
@@ -47,12 +49,14 @@ grid on;
 hold on;
 
 axis([1 content_n 0 1]);
-axis square;
+%axis square;
 
 xlabel('Content index');
 ylabel('Popularity');
 
-markers = {'-ko', '-ks', '-k^', '--ko', '--ks', '--k^'};
+%colors = ['m', 'b', 'r', 'g', 'k', 'y'];
+%markers = ['o', 's', '^', 'v', 'd'];
+markers = {'-bs', '-r^', '-gv', '-kd', '-yx'};
 
 plot_obj = zeros(1, numel(alpha));
 plot_str = cell(1, numel(alpha));
@@ -73,17 +77,21 @@ legend(plot_obj(1:numel(alpha)), plot_str{1:numel(alpha)});
 
 title(sprintf('Content popularity'));
 
+set(gcf, 'units', 'centimeters', 'position', [10 10 20 10]);
+
 hold off;
+
+saveas(gcf, '/home/adamiaonr/Dropbox/Workbench/PhD/mtsp/project/report/figures/pop.fig');
 
 %% 1.2) simulation rounds
 
-for j = 1:numel(cs_size)
-
-    simulate(content_n, content_popularity(4,:), cs_size(j), 'LRU', round_n, topology, clnt_n, rtr_n, rtr_level, srvr_n, figure_dir_cascade);
-    %simulate(content_n, content_popularity, cs_size(j), 'MRU', round_n, topology, clnt_n, rtr_n, rtr_level, srvr_n, figure_dir_cascade);
-    %simulate(content_n, content_popularity, cs_size(j), 'RANDOM', round_n, topology, clnt_n, rtr_n, rtr_level, srvr_n, figure_dir_cascade);
-    
-end
+% for j = 1:numel(cs_size)
+% 
+%     simulate(content_n, content_popularity(3,:), cs_size(j), 'LRU', round_n, topology, clnt_n, rtr_n, rtr_level, srvr_n, figure_dir_cascade);
+%     simulate(content_n, content_popularity(3,:), cs_size(j), 'MRU', round_n, topology, clnt_n, rtr_n, rtr_level, srvr_n, figure_dir_cascade);
+%     simulate(content_n, content_popularity(3,:), cs_size(j), 'RANDOM', round_n, topology, clnt_n, rtr_n, rtr_level, srvr_n, figure_dir_cascade);
+%     
+% end
 
 %% 2.1) overall simulation parameters (tree topology)
 
@@ -145,8 +153,8 @@ rtr_level = [
 
 % for j = 1:numel(cs_size)
 % 
-%     simulate(content_n, content_popularity, cs_size(j), 'LRU', round_n, topology, clnt_n, rtr_n, rtr_level, srvr_n, figure_dir_tree);
-%     simulate(content_n, content_popularity, cs_size(j), 'MRU', round_n, topology, clnt_n, rtr_n, rtr_level, srvr_n, figure_dir_tree);
-%     simulate(content_n, content_popularity, cs_size(j), 'RANDOM', round_n, topology, clnt_n, rtr_n, rtr_level, srvr_n, figure_dir_tree);
+%     simulate(content_n, content_popularity(3,:), cs_size(j), 'LRU', round_n, topology, clnt_n, rtr_n, rtr_level, srvr_n, figure_dir_tree);
+%     simulate(content_n, content_popularity(3,:), cs_size(j), 'MRU', round_n, topology, clnt_n, rtr_n, rtr_level, srvr_n, figure_dir_tree);
+%     simulate(content_n, content_popularity(3,:), cs_size(j), 'RANDOM', round_n, topology, clnt_n, rtr_n, rtr_level, srvr_n, figure_dir_tree);
 %     
 % end

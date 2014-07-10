@@ -54,15 +54,15 @@ for the remaining components) would be encoded as
 \end{equation}\shortvertbreak
 
 With this 
-representation of \textbf{v}, we capture situations in which a network 
-entity may simultaneously receive\slash issue any Interest or Data packet as 
+representation, we capture situations in which a network 
+entity may simultaneously receive\slash issue any Interest or Data packet at 
 its input\slash output. Our models for NDN routers, clients or servers can be 
-seen as nonlinear dynamical subsystems, which accept inputs \textbf{u} and produce 
-outputs \textbf{y}, in the form of the vectors shown in~\ref{eq:signal} 
+seen as nonlinear dynamical subsystems, accepting inputs \textbf{u} and producing 
+outputs \textbf{y}, in the form shown in~\ref{eq:signal} 
 and~\ref{eq:signal-eg}. Furthermore, each one of these subsystems exhibits one or 
 more types of state \textbf{x} (e.g. the composition of a Content Store or a Pending 
-Interest Table), which evolves according to nonlinear dynamics driven by \textbf{u} and 
-the current state \textbf{x}:
+Interest Table), which evolves according to nonlinear dynamics $\mathcal{H}$, 
+driven by \textbf{u} and the current state \textbf{x}:
 
 \begin{equation}
     \textbf{x}[n + 1] = \mathcal{H}(\textbf{x}[n],\textbf{u}[n])
@@ -77,7 +77,7 @@ Outputs \textbf{y} are nonlinearly related to some current state \textbf{x} and 
 \end{equation}%\shortvertbreak
 
 We also note that in some subsystems, namely at the clients $C$, the outputs 
-\textbf{y} may include a stochastic component $w$ (e.g. in the case that Interest 
+\textbf{y} may include a stochastic component $w$ (e.g. in cases where Interest 
 signals are randomly generated):
 
 \begin{equation}
@@ -86,8 +86,7 @@ signals are randomly generated):
 \end{equation}%\shortvertbreak
 
 In the next subsections, we describe each one of the nonlinear subsystems in 
-detail, including the nature of the types of state and their nonlinear 
-dynamics.
+detail, including the types of state and associated nonlinear dynamics.
 
 \subsection{NDN Router Model}
 \label{subsec:meth-overview}
@@ -95,8 +94,8 @@ dynamics.
 An NDN router is the central entity of the presented model, acting 
 as the main agent of NDN's forwarding engine. It is also the more complex entity, 
 including a set of submodules, already 
-mentioned in Section~\ref{sec:ndn}: (1) the Forward Information Base (FIB); (2) 
-the Pending Interest Table (PIT); and (3) the Content Store (CS). We first 
+mentioned in Section~\ref{sec:ndn}: (1) the Pending Interest Table (PIT); (2) 
+the Content Store (CS); and (3) the Forward Information Base (FIB). We first 
 provide an overview of our NDN router module, and then proceed with the description 
 of each one of its submodules.\shortvertbreak
 
@@ -111,21 +110,24 @@ of each one of its submodules.\shortvertbreak
 
 Figure~\ref{fig:ndn-router-overview} provides a graphical description of the proposed 
 router model. A router $R$ contains a set of $|F|$ interfaces $F$, used to interconnect 
-it to other entities (e.g. some other router $R'$, a client $C$ or the server 
+it to other entities (e.g. some other router $R'$, a client $C$ or a server 
 $S$). Each interface can subsequently be divided into one input and one output 
 port, which `cross-connect' with the ports of the attached 
 interfaces (see Figure~\ref{fig:ndn-router-overview}). We use the notation 
 $F_{r,f,in}$ or $F_{r,f,out}$, to refer to the 
-input\slash output ports of an interface $f$, of a router $R_r$.\shortvertbreak
+input\slash output ports of an interface with index $f$, of a router $R_r$\footnote{We 
+adopt a flexible notation, sometimes referring to an interface as 
+$F_{r,f}$ when there is no need to specify a particular port.}.\shortvertbreak
 
-The act of forwarding some set of Interest\slash Data packets from a router $R_1$, 
+Taking Figure~\ref{fig:ndn-router-overview} as a supporting example, the act of 
+forwarding some set of Interest\slash Data packets from a router $R_1$, 
 over some interface $F_1$, is modeled by having $R_1$ fill $F_{1,1,out}$ with 
 some set of signals \textbf{y}, following the encoding shown in 
 Section~\ref{subsec:meth-overview}. Conversely, the act of receiving some set 
 of Interest\slash Data packets is modeled by having routers $R_2$ and $R_3$ --- 
 connected with $F_{1,1}$ via $F_{2,1}$ and $F_{3,1}$ --- fill $F_{2,1,in}$ and $F_{3,1,in}$ 
 with \textbf{u} \footnote{In fact, this procedure can be extended to any network entity, let 
-it be a router, a client or the server.}. As seen in Figure~\ref{fig:ndn-router-overview}, 
+it be a router, a client or a server.}. As seen in Figure~\ref{fig:ndn-router-overview}, 
 more than one entity may be connected to some interface, in which case the 
 signals \textbf{y} originating from the interconnected interfaces' output ports, 
 e.g. $F_{2,1,out}$ and $F_{3,1,out}$, are combined and summed at the other 
@@ -138,9 +140,9 @@ network topologies.\shortvertbreak
 \label{subsec:meth-pit}
 
 In the same way that the FIB commands the forwarding of Interests, the PIT 
-commands the forwarding of Data packets. Nevertheless, the composition of the 
+commands the forwarding of Data packets. The composition of the 
 PIT is more dynamic than that of the FIB, being dependent on the flow of 
-Interest and Data packets through the NDN router. We model the PIT as a 
+Interest and Data signals through the NDN router. We model the PIT as a 
 $|O| \times |F|$ matrix in the form:
 
 \begin{equation}
@@ -154,17 +156,16 @@ $|O| \times |F|$ matrix in the form:
 \textbf{PIT}\footnote{We use the form `PIT' for general references to the Pending 
 Interest Table, and `\textbf{PIT}' when referring to its matrix form, as in~\ref{eq:pit}. 
 This dual representation is extended to the FIB and CS.} entries 
-$(o,f)$ are encoded as 0 or 1: if $(o,f) = 1$, Data 
-packets of 
-type $O_o$ have been previously requested via interface $F_f$, and so Data 
-packets $d_{O_o}$ shall be forwarded via $F_f$; on the other hand, 
+$(o,f)$ are encoded as 0 or 1: if $(o,f) = 1$, Interests for content object 
+$O_o$ have been previously received in interface $F_{r,f}$, and so Data 
+packets $d_{O_o}$ shall be forwarded via $F_{r,f}$; on the other hand, 
 if $(o,f) = 0$, $d_{O_o}$ should not be forwarded via that 
 interface. The arrival of Interest and Data packets influences the composition of 
 the PIT over time, each triggering special routines --- \textbf{PIT::updateOnInterest()} and 
 \textbf{PIT::updateOnData()} --- shown below. We consider 
 special $2\,|O| \times |F|$ matrices \textbf{U} and \textbf{Y}, corresponding to the concatenation of 
 all the column vectors $\textbf{u}_{r,f}$ and $\textbf{y}_{r,f}$, i.e. the contents from the input and output ports 
-of all the interfaces $F_f$, at some router $R_r$:
+of all the interfaces $F_{r,f}$, at some router $R_r$:
 
 \begin{equation}
 \textbf{U} = \begin{bmatrix} \textbf{u}_{r,1} & \textbf{u}_{r,2} & ... & \textbf{u}_{r,|F|} \end{bmatrix}
@@ -201,8 +202,8 @@ sum vector, i.e. $\textbf{1}^{m} = [1\,1\,...\,1]^{T}$.}, we negate the
 result, obtaining a binary encoded $|O| \times 1$ 
 column vector which indicates the absence (encoded as  `1') and presence 
 (encoded as `0') of pending Interests for some content object $O_o$. Still in 
-line 4, we obtain a $|O| \times 1$ column vector, $\textbf{Y}'_i$, which encodes the 
-Interest signals that the NDN router needs to forward upstream. This is 
+line 4, we obtain a $|O| \times 1$ column vector, $\textbf{Y}'_i$, which encodes 
+Interest signals which are not already stored and that the NDN router needs to forward upstream. This is 
 accomplished by taking the logic AND, `$\&$', between $\neg(\textbf{PIT} \times \textbf{1}^{|F|})$ and 
 $\textbf{U}'$. Note that even 
 if $\textbf{U}'$ includes some $i_{O_o} > 1$, we only need to forward one Interest 

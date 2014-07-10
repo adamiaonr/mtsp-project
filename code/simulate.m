@@ -232,7 +232,13 @@ for r = 1:round_n
 end
 
 % 6) it's plottin' time...
-colors = ['m', 'b', 'r', 'g', 'y', 'k'];
+colors = ['m', 'b', 'r', 'g', 'k', 'y'];
+markers = ['o', 's', '^', 'v', 'd'];
+
+
+make_it_tight = true;
+subplot = @(m,n,p) subtightplot (m, n, p, [0.1 0.115], [0.125 0.075], [0.1 0.05]);
+if ~make_it_tight,  clear subplot;  end
 
 % % 6.0) plot the (cumulative) # of requests over time
 % figure();
@@ -278,12 +284,12 @@ grid on;
 hold on;
 
 axis([1 (clnt_n + rtr_n + srvr_n) 0 (1.05 * max([max(isent) max(ircvd)]))]);
-axis square;
+%axis square;
 
 xlabel('Node index');
 ylabel('# of Interests');
 
-isent_ = plot (1:1:(clnt_n + rtr_n + srvr_n), isent,  '-ob', 'LineWidth', 1);
+isent_ = plot (1:1:(clnt_n + rtr_n + srvr_n), isent,  '-^b', 'LineWidth', 1);
 ircvd_ = plot (1:1:(clnt_n + rtr_n + srvr_n), ircvd,  '-or', 'LineWidth', 1);
 
 legend([isent_ ircvd_], 'sent', 'received');
@@ -298,17 +304,19 @@ grid on;
 hold on;
 
 axis([1 (clnt_n + rtr_n + srvr_n) 0 (1.05 * max([max(dsent) max(drcvd)]))]);
-axis square;
+%axis square;
 
 xlabel('Node index');
 ylabel('# of Data packets');
 
-dsent_ = plot (1:1:(clnt_n + rtr_n + srvr_n), dsent,  '-ob', 'LineWidth', 1);
+dsent_ = plot (1:1:(clnt_n + rtr_n + srvr_n), dsent,  '-^b', 'LineWidth', 1);
 drcvd_ = plot (1:1:(clnt_n + rtr_n + srvr_n), drcvd,  '-or', 'LineWidth', 1);
 
 legend([dsent_ drcvd_], 'sent', 'received');
 
 title(sprintf('Data packets'));
+
+set(gcf, 'units', 'centimeters', 'position', [10 10 20 10]);
 
 hold off;
 
@@ -328,6 +336,9 @@ ircvd = zeros(1, rtr_level_n);
 dsent = zeros(1, rtr_level_n);
 drcvd = zeros(1, rtr_level_n);
 
+isent_c = zeros(content_n, rtr_level_n);
+ircvd_c = zeros(content_n, rtr_level_n);
+
 for i = 1:rtr_level_n
 
     level_rtrs = find(rtr_level(:,i));
@@ -335,7 +346,11 @@ for i = 1:rtr_level_n
     for j = 1:numel(level_rtrs)
 
         isent(i) = isent(i) + sum(sum(nodes(level_rtrs(j)).ifaces.stats_interests_sent, 2));
+        isent_c(:,i) = isent_c(:,i) + sum(nodes(level_rtrs(j)).ifaces.stats_interests_sent, 2);
+        
         ircvd(i) = ircvd(i) + sum(sum(nodes(level_rtrs(j)).ifaces.stats_interests_rcvd, 2));
+        ircvd_c(:,i) = ircvd_c(:,i) + sum(nodes(level_rtrs(j)).ifaces.stats_interests_rcvd, 2);
+                
         dsent(i) = dsent(i) + sum(sum(nodes(level_rtrs(j)).ifaces.stats_data_sent, 2));
         drcvd(i) = drcvd(i) + sum(sum(nodes(level_rtrs(j)).ifaces.stats_data_rcvd, 2));
         
@@ -351,12 +366,12 @@ grid on;
 hold on;
 
 axis([1 (rtr_level_n) 0 (1.05 * max([max(isent) max(ircvd)]))]);
-axis square;
+%axis square;
 
 xlabel('Topology level');
 ylabel('# of Interests');
 
-isent_ = plot (1:1:rtr_level_n, isent,  '-ob', 'LineWidth', 1);
+isent_ = plot (1:1:rtr_level_n, isent,  '-^b', 'LineWidth', 1);
 ircvd_ = plot (1:1:rtr_level_n, ircvd,  '-or', 'LineWidth', 1);
 
 legend([isent_ ircvd_], 'sent', 'received');
@@ -371,17 +386,19 @@ grid on;
 hold on;
 
 axis([1 (rtr_level_n) 0 (1.05 * max([max(dsent) max(drcvd)]))]);
-axis square;
+%axis square;
 
 xlabel('Topology level');
 ylabel('# of Data packets');
 
-dsent_ = plot (1:1:rtr_level_n, dsent,  '-ob', 'LineWidth', 1);
+dsent_ = plot (1:1:rtr_level_n, dsent,  '-^b', 'LineWidth', 1);
 drcvd_ = plot (1:1:rtr_level_n, drcvd,  '-or', 'LineWidth', 1);
 
 legend([dsent_ drcvd_], 'sent', 'received');
 
 title(sprintf('Data packets per level'));
+
+set(gcf, 'units', 'centimeters', 'position', [10 10 20 10]);
 
 hold off;
 
@@ -447,7 +464,7 @@ hold on;
 
 % 6.3.2.1) apparently, this is important
 axis([0 content_n 0 1]);
-axis square;
+%axis square;
 
 xlabel('Content index');
 ylabel('Hit rate');
@@ -459,8 +476,8 @@ plot_str = cell(1, rtr_level_n);
 
 for i = 2:(rtr_level_n - 1)
     
-    plot (1:1:content_n, (hit_level(:,i))',  sprintf('o%s', colors(i)), 'LineWidth', 1);
-    plot_obj(i) = plot(1:1:content_n, hit_level_reg(:,i)', sprintf('-%s', colors(i)), 'LineWidth', 1);
+    plot (1:1:content_n, (hit_level(:,i))',  sprintf('.%s', colors(i)), 'LineWidth', 1);
+    plot_obj(i) = plot(1:5:content_n, hit_level_reg(1:5:content_n,i)', sprintf('-%s%s', colors(i), markers(i)), 'LineWidth', 1);
     plot_str{i} = sprintf('Level %d', i);
     
 end
@@ -487,7 +504,7 @@ grid on;
 hold on;
 
 axis([0 content_n 0 1]);
-axis square;
+%axis square;
 
 xlabel('Content index');
 ylabel('Miss rate');
@@ -496,8 +513,8 @@ ylabel('Miss rate');
 
 for i = 2:(rtr_level_n - 1)
     
-    plot (1:1:content_n, (miss_level(:,i))',  sprintf('o%s', colors(i)), 'LineWidth', 1);
-    plot_obj(i) = plot(1:1:content_n, miss_level_reg(:,i)',  sprintf('-%s', colors(i)), 'LineWidth', 1);
+    plot (1:1:content_n, (miss_level(:,i))',  sprintf('.%s', colors(i)), 'LineWidth', 1);
+    plot_obj(i) = plot(1:5:content_n, miss_level_reg(1:5:content_n,i)',  sprintf('-%s%s', colors(i), markers(i)), 'LineWidth', 1);
     
 end
 
@@ -512,6 +529,8 @@ end
 legend(plot_obj(2:(rtr_level_n - 1)), plot_str{2:(rtr_level_n - 1)});
 
 title(sprintf('Cache miss rate'));
+
+set(gcf, 'units', 'centimeters', 'position', [10 10 20 10]);
 
 hold off;
 
@@ -542,7 +561,7 @@ figure();
 grid on;
 hold on;
 
-axis square;
+%axis square;
 
 xlabel('Content index');
 ylabel('Relative time');
@@ -551,7 +570,7 @@ ylabel('Relative time');
 
 for i = 2:(rtr_level_n - 1)
         
-    plot_obj(i) = plot(1:1:content_n, time_rtr_level(:,i)', sprintf('-%s', colors(i)), 'LineWidth', 1);
+    plot_obj(i) = plot(1:1:content_n, time_rtr_level(:,i)', sprintf('-%s%s', colors(i), markers(i)), 'LineWidth', 1);
     plot_str{i} = sprintf('Level %d', i);
     
 end
@@ -560,35 +579,42 @@ legend(plot_obj(2:(rtr_level_n - 1)), plot_str{2:(rtr_level_n - 1)});
 
 title(sprintf('Relative time in CS'));
 
+set(gcf, 'units', 'centimeters', 'position', [10 10 20 10]);
+
 hold off;
 
 filename = sprintf('%s/6-4.fig', folder);
 saveas(gcf, filename);
 
-% % 6.5) Number of Interest ‘hits’, per content object and network
-% % level (including srvr)
-% 
-% figure();
-% 
-% grid on;
-% hold on;
-% 
-% xlabel('Content index');
-% ylabel('# Interest hits');
-% 
-% %plot_obj = zeros(1, rtr_level_n);
-% 
-% for i = 2:(rtr_level_n)
-%         
-%     plot_obj(i) = plot(1:1:content_n, hit_level(:,i)', sprintf('-%s', colors(i)), 'LineWidth', 1);
-%     plot_str{i} = sprintf('Level %d', i);
-%     
-% end
-% 
-% legend(plot_obj(2:(rtr_level_n)), plot_str{2:(rtr_level_n)});
-% 
-% title(sprintf('Interest hits, per topology level'));
-% 
-% hold off;
+% 6.5) Ratio of received Interests to original requests, per
+% content object and network level (including server(s) S)
+
+figure();
+
+grid on;
+hold on;
+
+xlabel('Content index');
+ylabel('Received Interests vs. content requests');
+
+%plot_obj = zeros(1, rtr_level_n);
+
+for i = 2:(rtr_level_n)
+        
+    plot_obj(i) = plot(1:1:content_n, (ircvd_c(:,i)' ./ isent_c(:,1)'), sprintf('-%s%s', colors(i), markers(i)), 'LineWidth', 1);
+    plot_str{i} = sprintf('Level %d', i);
+    
+end
+
+legend(plot_obj(2:(rtr_level_n)), plot_str{2:(rtr_level_n)});
+
+title(sprintf('Received Interests vs. original requests, per content object and network level'));
+
+set(gcf, 'units', 'centimeters', 'position', [10 10 20 10]);
+
+hold off;
+
+filename = sprintf('%s/6-5.fig', folder);
+saveas(gcf, filename);
 
 end

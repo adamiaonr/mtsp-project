@@ -25,7 +25,17 @@ For all experiments we consider a content object space of
 $|O| = 100$, with decreasing popularity and following a Zipf distribution: 
 each content object $O_o$, with $o = \{1,2,...,|O|\}$, is requested by a client 
 $C$ with probability $q_{o} = \frac{c}{o^{\alpha}}$, with $c = 0.8$ and 
-$\alpha \in \{0.5, 1, 2\}$.\shortvertbreak
+$\alpha \in \{0.25, 0.5, 1, 2\}$, depicted in Figure~\ref{fig:zipf}.\shortvertbreak
+
+\begin{figure}[h!]
+
+    \centering
+    \includegraphics[width=0.45\textwidth]{figures/pop.png}
+    \cprotect\caption{Content popularity distribution, for $c = 0.8$ and 
+        $\alpha \in \{0.25, 0.5, 1, 2\}$.}
+    \label{fig:zipf}
+
+\end{figure}
 
 At each experiment round (see Section~\ref{subsec:meth-conn-dots} for more details on 
 rounds), each client $C$ generates a signal for content object $O_o$ with 
@@ -131,13 +141,13 @@ The captions on the figures mention the respective experimental parameters.\shor
 \begin{figure}[h!]
     \centering
     \subfigure[]{
-        \includegraphics[width=0.30\textwidth] {figures/experiments/cascade/LRU/25/6-2.png}
+        \includegraphics[width=0.45\textwidth] {figures/experiments/cascade/LRU/25/6-2.png}
         %\includegraphics[width=0.30\textwidth] {figures/fib-topo.png}
         \label{fig:exp-results-topologies-cascade}
     }
 
     \subfigure[]{
-        \includegraphics[width=0.30\textwidth] {figures/experiments/tree/LRU/25/6-2.png}
+        \includegraphics[width=0.45\textwidth] {figures/experiments/tree/LRU/25/6-2.png}
         %\includegraphics[width=0.30\textwidth] {figures/fib-topo.png}
         \label{fig:exp-results-topologies-tree}
     }
@@ -155,26 +165,26 @@ The captions on the figures mention the respective experimental parameters.\shor
 \begin{figure}[h!]
     \centering
     \subfigure[]{
-        \includegraphics[width=0.30\textwidth] {figures/experiments/cascade/LRU/25/6-3.png}
+        \includegraphics[width=0.45\textwidth] {figures/experiments/cascade/LRU/25/6-3.png}
         %\includegraphics[width=0.30\textwidth] {figures/fib-topo.png}
         \label{fig:exp-results-cache-alg-cascade-lru}
     }
 
     \subfigure[]{
-        \includegraphics[width=0.30\textwidth] {figures/experiments/cascade/MRU/25/6-3.png}
+        \includegraphics[width=0.45\textwidth] {figures/experiments/cascade/MRU/25/6-3.png}
         %\includegraphics[width=0.30\textwidth] {figures/fib-topo.png}
         \label{fig:exp-results-cache-alg-cascade-mru}
     }
 
     \subfigure[]{
-        \includegraphics[width=0.30\textwidth] {figures/experiments/cascade/RANDOM/25/6-3.png}
+        \includegraphics[width=0.45\textwidth] {figures/experiments/cascade/RANDOM/25/6-3.png}
         %\includegraphics[width=0.30\textwidth] {figures/fib-topo.png}
         \label{fig:exp-results-cache-alg-cascade-random}
     }
 
     \cprotect\caption{Cache hit\slash miss rates for different cache algorithms: LRU (a), MRU (b) 
-        and Random caching (c). Cascade topology, $|L| = 5$, $|C| = 8$, 
-        $|R| = 7$ and $|S| = 1$, $|P| = 25$, $\alpha = 1$.}
+        and Random caching (c). Cascade topology, $|L| = 5$, $|C| = 1$, 
+        $|R| = 3$ and $|S| = 1$, $|P| = 25$, $\alpha = 1$.}
     \label{fig:exp-results-cache-alg-cascade}
 
 \end{figure}
@@ -182,19 +192,19 @@ The captions on the figures mention the respective experimental parameters.\shor
 \begin{figure}[h!]
     \centering
     \subfigure[]{
-        \includegraphics[width=0.30\textwidth] {figures/experiments/tree/LRU/25/6-3.png}
+        \includegraphics[width=0.45\textwidth] {figures/experiments/tree/LRU/25/6-3.png}
         %\includegraphics[width=0.30\textwidth] {figures/fib-topo.png}
         \label{fig:exp-results-cache-alg-lru}
     }
 
     \subfigure[]{
-        \includegraphics[width=0.30\textwidth] {figures/experiments/tree/MRU/25/6-3.png}
+        \includegraphics[width=0.45\textwidth] {figures/experiments/tree/MRU/25/6-3.png}
         %\includegraphics[width=0.30\textwidth] {figures/fib-topo.png}
         \label{fig:exp-results-cache-alg-mru}
     }
 
     \subfigure[]{
-        \includegraphics[width=0.30\textwidth] {figures/experiments/tree/RANDOM/25/6-3.png}
+        \includegraphics[width=0.45\textwidth] {figures/experiments/tree/RANDOM/25/6-3.png}
         %\includegraphics[width=0.30\textwidth] {figures/fib-topo.png}
         \label{fig:exp-results-cache-alg-random}
     }
@@ -203,6 +213,50 @@ The captions on the figures mention the respective experimental parameters.\shor
         and Random caching (c). Binary tree topology, $|L| = 5$, $|C| = 8$, 
         $|R| = 7$ and $|S| = 1$, $|P| = 25$, $\alpha = 1$.}
     \label{fig:exp-results-cache-alg}
+
+\end{figure}
+
+\begin{figure}[h!]
+    \centering
+    \subfigure[]{
+        \includegraphics[width=0.45\textwidth] {figures/experiments/cascade/LRU/25/6-5.png}
+        %\includegraphics[width=0.30\textwidth] {figures/fib-topo.png}
+        \label{fig:exp-results-latency-cascade-lru}
+    }
+
+    \subfigure[]{
+        \includegraphics[width=0.45\textwidth] {figures/experiments/cascade/RANDOM/25/6-5.png}
+        %\includegraphics[width=0.30\textwidth] {figures/fib-topo.png}
+        \label{fig:exp-results-latency-cascade-random}
+    }
+
+    \cprotect\caption{Received Interests to original requests ratio, per content 
+        object and network level. Different cache algorithms --- LRU (a) and 
+        random caching (b) --- cascade topology, $|L| = 5$, $|C| = 1$, 
+        $|R| = 3$ and $|S| = 1$, $|P| = 25$, $\alpha = 1$.}
+    \label{fig:exp-results-latency-cascade}
+
+\end{figure}
+
+\begin{figure}[h!]
+    \centering
+    \subfigure[]{
+        \includegraphics[width=0.45\textwidth] {figures/experiments/tree/LRU/25/6-5.png}
+        %\includegraphics[width=0.30\textwidth] {figures/fib-topo.png}
+        \label{fig:exp-results-latency-tree-lru}
+    }
+
+    \subfigure[]{
+        \includegraphics[width=0.45\textwidth] {figures/experiments/tree/RANDOM/25/6-5.png}
+        %\includegraphics[width=0.30\textwidth] {figures/fib-topo.png}
+        \label{fig:exp-results-latency-tree-random}
+    }
+
+    \cprotect\caption{Received Interests to original requests ratio, per content 
+        object and network level. Different cache algorithms --- LRU (a) and 
+        random caching (b) --- binary tree topology, $|L| = 5$, $|C| = 8$, 
+        $|R| = 7$ and $|S| = 1$, $|P| = 25$, $\alpha = 1$.}
+    \label{fig:exp-results-latency-tree}
 
 \end{figure}
 
