@@ -1,8 +1,8 @@
 \section{Experiments}
 \label{sec:experiments}
 
-This section describes a set of experiments, conducted to evaluate 
-the behavior of our NDN model under different cache conditions. In 
+This section describes a set of experiments conducted to evaluate 
+the behavior of our NDN model, under different cache conditions. In 
 Section~\ref{subsec:exp-setup}, we start 
 with a brief description of the setup of our experiments, 
 including relevant parameters (e.g. number of content objects, popularity 
@@ -30,7 +30,7 @@ $\alpha \in \{0.25, 0.5, 1, 2\}$, depicted in Figure~\ref{fig:zipf}.\shortvertbr
 \begin{figure}[h!]
 
     \centering
-    \includegraphics[width=0.45\textwidth]{figures/pop.png}
+    \includegraphics[width=0.45\textwidth]{figures/pop.pdf}
     \cprotect\caption{Content popularity distribution, for $c = 0.8$ and 
         $\alpha \in \{0.25, 0.5, 1, 2\}$.}
     \label{fig:zipf}
@@ -133,7 +133,7 @@ the ratio vs. the total number of simulation rounds.
 Here we present a selection of experimental results, following the metrics 
 introduced in Section~\ref{subsec:exp-setup}\footnote{A complete collection of 
 results can be found in~\url{github.com/adamiaonr/mtsp-project/tree/master/report/figures/experiments}.}. 
-The captions on the figures mention the respective experimental parameters.\shortvertbreak
+The captions on the figures enclose the respective experimental parameters.\shortvertbreak
 
 %\subsubsection{Network Topologies}
 %\label{subsec:exp-results-topologies}
@@ -141,14 +141,14 @@ The captions on the figures mention the respective experimental parameters.\shor
 \begin{figure}[h!]
     \centering
     \subfigure[]{
-        \includegraphics[width=0.45\textwidth] {figures/experiments/cascade/LRU/25/6-2.png}
-        %\includegraphics[width=0.30\textwidth] {figures/fib-topo.png}
+        \includegraphics[width=0.45\textwidth] {figures/experiments/cascade/LRU/25/6-2.pdf}
+        %\includegraphics[width=0.30\textwidth] {figures/fib-topo.pdf}
         \label{fig:exp-results-topologies-cascade}
     }
 
     \subfigure[]{
-        \includegraphics[width=0.45\textwidth] {figures/experiments/tree/LRU/25/6-2.png}
-        %\includegraphics[width=0.30\textwidth] {figures/fib-topo.png}
+        \includegraphics[width=0.45\textwidth] {figures/experiments/tree/LRU/25/6-2.pdf}
+        %\includegraphics[width=0.30\textwidth] {figures/fib-topo.pdf}
         \label{fig:exp-results-topologies-tree}
     }
 
@@ -165,20 +165,20 @@ The captions on the figures mention the respective experimental parameters.\shor
 \begin{figure}[h!]
     \centering
     \subfigure[]{
-        \includegraphics[width=0.45\textwidth] {figures/experiments/cascade/LRU/25/6-3.png}
-        %\includegraphics[width=0.30\textwidth] {figures/fib-topo.png}
+        \includegraphics[width=0.45\textwidth] {figures/experiments/cascade/LRU/25/6-3.pdf}
+        %\includegraphics[width=0.30\textwidth] {figures/fib-topo.pdf}
         \label{fig:exp-results-cache-alg-cascade-lru}
     }
 
     \subfigure[]{
-        \includegraphics[width=0.45\textwidth] {figures/experiments/cascade/MRU/25/6-3.png}
-        %\includegraphics[width=0.30\textwidth] {figures/fib-topo.png}
+        \includegraphics[width=0.45\textwidth] {figures/experiments/cascade/MRU/25/6-3.pdf}
+        %\includegraphics[width=0.30\textwidth] {figures/fib-topo.pdf}
         \label{fig:exp-results-cache-alg-cascade-mru}
     }
 
     \subfigure[]{
-        \includegraphics[width=0.45\textwidth] {figures/experiments/cascade/RANDOM/25/6-3.png}
-        %\includegraphics[width=0.30\textwidth] {figures/fib-topo.png}
+        \includegraphics[width=0.45\textwidth] {figures/experiments/cascade/RANDOM/25/6-3.pdf}
+        %\includegraphics[width=0.30\textwidth] {figures/fib-topo.pdf}
         \label{fig:exp-results-cache-alg-cascade-random}
     }
 
@@ -192,20 +192,20 @@ The captions on the figures mention the respective experimental parameters.\shor
 \begin{figure}[h!]
     \centering
     \subfigure[]{
-        \includegraphics[width=0.45\textwidth] {figures/experiments/tree/LRU/25/6-3.png}
-        %\includegraphics[width=0.30\textwidth] {figures/fib-topo.png}
+        \includegraphics[width=0.45\textwidth] {figures/experiments/tree/LRU/25/6-3.pdf}
+        %\includegraphics[width=0.30\textwidth] {figures/fib-topo.pdf}
         \label{fig:exp-results-cache-alg-lru}
     }
 
     \subfigure[]{
-        \includegraphics[width=0.45\textwidth] {figures/experiments/tree/MRU/25/6-3.png}
-        %\includegraphics[width=0.30\textwidth] {figures/fib-topo.png}
+        \includegraphics[width=0.45\textwidth] {figures/experiments/tree/MRU/25/6-3.pdf}
+        %\includegraphics[width=0.30\textwidth] {figures/fib-topo.pdf}
         \label{fig:exp-results-cache-alg-mru}
     }
 
     \subfigure[]{
-        \includegraphics[width=0.45\textwidth] {figures/experiments/tree/RANDOM/25/6-3.png}
-        %\includegraphics[width=0.30\textwidth] {figures/fib-topo.png}
+        \includegraphics[width=0.45\textwidth] {figures/experiments/tree/RANDOM/25/6-3.pdf}
+        %\includegraphics[width=0.30\textwidth] {figures/fib-topo.pdf}
         \label{fig:exp-results-cache-alg-random}
     }
 
@@ -219,14 +219,14 @@ The captions on the figures mention the respective experimental parameters.\shor
 \begin{figure}[h!]
     \centering
     \subfigure[]{
-        \includegraphics[width=0.45\textwidth] {figures/experiments/cascade/LRU/25/6-5.png}
-        %\includegraphics[width=0.30\textwidth] {figures/fib-topo.png}
+        \includegraphics[width=0.45\textwidth] {figures/experiments/cascade/LRU/25/6-5.pdf}
+        %\includegraphics[width=0.30\textwidth] {figures/fib-topo.pdf}
         \label{fig:exp-results-latency-cascade-lru}
     }
 
     \subfigure[]{
-        \includegraphics[width=0.45\textwidth] {figures/experiments/cascade/RANDOM/25/6-5.png}
-        %\includegraphics[width=0.30\textwidth] {figures/fib-topo.png}
+        \includegraphics[width=0.45\textwidth] {figures/experiments/cascade/RANDOM/25/6-5.pdf}
+        %\includegraphics[width=0.30\textwidth] {figures/fib-topo.pdf}
         \label{fig:exp-results-latency-cascade-random}
     }
 
@@ -241,14 +241,14 @@ The captions on the figures mention the respective experimental parameters.\shor
 \begin{figure}[h!]
     \centering
     \subfigure[]{
-        \includegraphics[width=0.45\textwidth] {figures/experiments/tree/LRU/25/6-5.png}
-        %\includegraphics[width=0.30\textwidth] {figures/fib-topo.png}
+        \includegraphics[width=0.45\textwidth] {figures/experiments/tree/LRU/25/6-5.pdf}
+        %\includegraphics[width=0.30\textwidth] {figures/fib-topo.pdf}
         \label{fig:exp-results-latency-tree-lru}
     }
 
     \subfigure[]{
-        \includegraphics[width=0.45\textwidth] {figures/experiments/tree/RANDOM/25/6-5.png}
-        %\includegraphics[width=0.30\textwidth] {figures/fib-topo.png}
+        \includegraphics[width=0.45\textwidth] {figures/experiments/tree/RANDOM/25/6-5.pdf}
+        %\includegraphics[width=0.30\textwidth] {figures/fib-topo.pdf}
         \label{fig:exp-results-latency-tree-random}
     }
 

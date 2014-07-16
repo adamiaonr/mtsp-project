@@ -30,10 +30,14 @@
 \usepackage{framed}
 \usepackage{blindtext}
 \usepackage{float}
+\usepackage{epstopdf}
 \usepackage{algpseudocode}
 \usepackage{cprotect}
 % always on last place
 \usepackage{hyperref}
+
+\DeclareGraphicsRule{.eps}{pdf}{.pdf}{`epstopdf #1}
+\pdfcompresslevel=9
 
 % hyperref options
 \hypersetup{
