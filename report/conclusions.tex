@@ -1,4 +1,23 @@
-\section{Discussion and Conclusions}
+\section{Conclusions}
 \label{sec:conclusions}
 
+In this work, we have presented the specification details of an Named Data 
+Networking (NDN)~\cite{Jacobson2009} simulation model, inspired by the field of nonlinear dynamical systems, which 
+allows the evaluation of different caching policies under different topologies. To 
+do so, we have understood the mechanics of NDN's forwarding engine and proposed 
+models for each of its components, identifying the relevant types of inputs, 
+outputs, state and associated nonlinear dynamics.\shortvertbreak
 
+To demonstrate the feasibility of the proposed model, we implemented the 
+given specifications in MATLAB\textsuperscript{\textregistered}, providing 
+simulation results with three simple cache algorithms, specifically (1) Least Recently 
+Used (LRU), (2) More Recently Used (MRU) and (3) Random caching. The results 
+obtained after simulation allow one to identify some of the key features claimed 
+by the NDN architecture~\cite{Jacobson2009} --- in a way asserting the validity 
+of the proposed model --- as well as specificities of 
+the considered cache algorithms. We believe the proposed model specification 
+and implementation to be of particular interest for designers wishing to 
+perform preliminary evaluations of caching policies under NDN. Even though the 
+purpose of the proposed model is not to strive for a truly realistic 
+scenario, as future enhancements we predict the introduction of packet loss, 
+network congestion, among other parameters, in order to make it more robust.

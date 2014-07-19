@@ -58,8 +58,8 @@ representation, we capture situations in which a network
 entity may simultaneously receive\slash issue any Interest or Data packet at 
 its input\slash output. Our models for NDN routers, clients or servers can be 
 seen as nonlinear dynamical subsystems, accepting inputs \textbf{u} and producing 
-outputs \textbf{y}, in the form shown in~\ref{eq:signal} 
-and~\ref{eq:signal-eg}. Furthermore, each one of these subsystems exhibits one or 
+outputs \textbf{y}, in the form shown in eq.~\ref{eq:signal} 
+and eq.~\ref{eq:signal-eg}. Furthermore, each one of these subsystems exhibits one or 
 more types of state \textbf{x} (e.g. the composition of a Content Store or a Pending 
 Interest Table), which evolves according to nonlinear dynamics $\mathcal{H}$, 
 driven by \textbf{u} and the current state \textbf{x}:
@@ -154,7 +154,7 @@ $|O| \times |F|$ matrix in the form:
 \end{equation}\shortvertbreak
 
 \textbf{PIT}\footnote{We use the form `PIT' for general references to the Pending 
-Interest Table, and `\textbf{PIT}' when referring to its matrix form, as in~\ref{eq:pit}. 
+Interest Table, and `\textbf{PIT}' when referring to its matrix form, as in eq.~\ref{eq:pit}. 
 This dual representation is extended to the FIB and CS.} entries 
 $(o,f)$ are encoded as 0 or 1: if $(o,f) = 1$, Interests for content object 
 $O_o$ have been previously received in interface $F_{r,f}$, and so Data 
@@ -187,8 +187,10 @@ of all the interfaces $F_{r,f}$, at some router $R_r$:
 %    \State $\textbf{D} \leftarrow$ diag$(\neg(\textbf{PIT} \times \textbf{1}))$
     \State $\textbf{Y}'_i \leftarrow$ $\neg(\textbf{PIT} \times \textbf{1}^{|F|}) \ \& \ (\textbf{U}' \times \textbf{1}^{|F|})$
 %    \State $\textbf{B} \leftarrow \textbf{D} \times \textbf{U}'$ 
+    \State $\textbf{Y}'_i \leftarrow \textbf{FIB} \ \& \ (\textbf{Y}'_i \times {\textbf{1}^{|F|}}^{T})$
+    \State $\textbf{Y}_i \leftarrow \begin{bmatrix} \textbf{Y}'_i \\ \textbf{0}^{|O| \times |F|} \end{bmatrix}$
     \State \textbf{PIT} $\leftarrow$ \textbf{PIT} $|$ $\textbf{U}'$ 
-    \State \Return $\textbf{Y}'_i$
+    \State \Return $\textbf{Y}_i$
 
 \end{algorithmic}\shortvertbreak
 
@@ -198,18 +200,23 @@ of $\textbf{U}$), we first identify the content items $O_o$, or the row indexes 
 convenience, we often recur to binary operations (negation `$\neg$', 
 conjunction `$\&$', disjunction `$|$') over matrices: e.g. in line 4, after 
 summing all columns of the \textbf{PIT}\footnote{We use the notation $\textbf{1}^{m}$ for the $m \times 1$
-sum vector, i.e. $\textbf{1}^{m} = [1\,1\,...\,1]^{T}$.}, we negate the 
+sum vector, i.e. $\textbf{1}^{m} = [1\,1\,...\,1]^{T}$, and $\textbf{1}^{m \times n}$ for an $m \times n$ 
+matrix solely composed by '1'. Equivalently, we also use $\textbf{0}^{m}$ and $\textbf{0}^{m \times n}$.}, we negate the 
 result, obtaining a binary encoded $|O| \times 1$ 
 column vector which indicates the absence (encoded as  `1') and presence 
 (encoded as `0') of pending Interests for some content object $O_o$. Still in 
 line 4, we obtain a $|O| \times 1$ column vector, $\textbf{Y}'_i$, which encodes 
-Interest signals which are not already stored and that the NDN router needs to forward upstream. This is 
+Interest signals which are not already stored in the PIT, and that the NDN router needs to forward upstream. This is 
 accomplished by taking the logic AND, `$\&$', between $\neg(\textbf{PIT} \times \textbf{1}^{|F|})$ and 
 $\textbf{U}'$. Note that even 
 if $\textbf{U}'$ includes some $i_{O_o} > 1$, we only need to forward one Interest 
 over the interfaces specified in the FIB, and so the binary encoding of $\textbf{Y}'_i$, 
-resulting from the use of binary operations, neatly serves our purposes. 
-In line 5, the 
+resulting from the use of binary operations, neatly serves our purposes. The operation 
+in line 5 results in a final form of $\textbf{Y}'_i$, which assigns the 
+Interest signals to be forwarded upstream to the appropriate interfaces, according to the FIB. 
+In line 6 we finally obtain $\textbf{Y}_i$, a $2\,|O| \times |F|$ matrix compliant 
+with the format shown in eq.~\ref{eq:b}. 
+In line 7, the 
 contents of the \textbf{PIT} are updated by performing a logic OR, `$|$', with $\textbf{U}'$, so 
 that it registers all the newly received 
 Interest signals and their correspondence to interfaces. This last step is important, 
@@ -223,7 +230,8 @@ interfaces.\shortvertbreak
     \State $\textbf{U}' \leftarrow \textbf{U}(|O|+1:2\,|O|,:)$
     \State $\textbf{G} \leftarrow (\textbf{U}' \times \textbf{1}^{|F|}) \times {\textbf{1}^{|F|}}^{T}$
 %    \State $\textbf{D} \leftarrow \textbf{U}' \times \textbf{1}$
-    \State $\textbf{Y}_d \leftarrow$ $\textbf{PIT} \ \& \ \textbf{G}$
+    \State $\textbf{Y}'_d \leftarrow$ $\textbf{PIT} \ \& \ \textbf{G}$
+    \State $\textbf{Y}_d \leftarrow$ $\begin{bmatrix} \textbf{0}^{|O| \times |F|} \\ \textbf{Y}'_d \end{bmatrix}$
     \State \textbf{PIT} $\leftarrow$ $\textbf{PIT} \ \& \ \neg\textbf{G}$ 
     \State \Return $\textbf{Y}_d$
 
@@ -236,15 +244,15 @@ the objective of PIT::updateOnData() is the reverse operation of PIT::updateOnIn
 packets over the interfaces for which there is a registered Interest in the \textbf{PIT}, with 
 the result encoded in matrix $\textbf{Y}_d$. $\textbf{G}$ consists in a $|O| \times |F|$ matrix, which expands the single-column 
 vector $\textbf{U}' \times \textbf{1}^{|F|}$ to $|F|$ columns (line 4), making it ready 
-for the subsequent AND (`\&') operations (lines 5 and 6). The final 
-step of the operation (line 6) consists in erasing 
+for the subsequent AND (`\&') operations (lines 5 and 7). The final 
+step of the operation (line 7) consists in erasing 
 all Interest registrations which have been successfully attended.\shortvertbreak
 
 As a final remark, we can now identify the \textbf{PIT} as one form of state 
 \textbf{x}, which is driven by the nonlinear dynamics specified on the 
-PIT::updateOnInterest() and PIT::updateOnData() routines (lines 5 and 6, respectively). 
+PIT::updateOnInterest() and PIT::updateOnData() routines (line 7, in both cases). 
 Furthermore, both routines also contribute to the generation of outputs, 
-in the form of matrices $\textbf{Y}_d$ and $\textbf{Y}'_i$.\shortvertbreak
+in the form of matrices $\textbf{Y}_i$ and $\textbf{Y}_d$.\shortvertbreak
 
 \subsubsection{Content Store (CS)}
 \label{subsec:meth-cs}
@@ -254,7 +262,7 @@ We model the Content Store (CS), i.e. the NDN router's cache, as an $|O|
 number of content objects it is able to accommodate at any given point in time. 
 We use $P$ to represent a position or slot in the CS, which is able to hold a single 
 content object $O_o$ (here we do not consider a notion of content object size, 
-an object always fits in a slot $P$). E.g. in~\ref{eq:cs} we show the encoding 
+an object always fits in a slot $P$). E.g. in eq.~\ref{eq:cs} we show the encoding 
 of the \textbf{CS} for $R_1$ in Figure~\ref{fig:fib-topo}, with $|P| = 2$, 
 which is shown to contain content objects $O_2$ and $O_4$\footnote{Usually, 
 we consider $|P| << |O|$.}.
@@ -329,7 +337,7 @@ $|O| \times |F|$ matrix in the form
     \label{eq:fib}
 \end{equation}\shortvertbreak
 
-The \textbf{FIB} encoding shown in~\ref{eq:fib} would be held by router $R_1$ in the 
+The \textbf{FIB} encoding shown in eq.~\ref{eq:fib} would be held by router $R_1$ in the 
 simple topology shown in Figure~\ref{fig:fib-topo}. \textbf{FIB} entries 
 $(o,f)$ are encoded as 0 or 1: if $(o,f) = 1$, content objects of 
 type $O_o$ are accessible via interface $F_f$, meaning that Interests 
@@ -345,10 +353,9 @@ as CS::updateOnInterest():\shortvertbreak
 \State \textbf{define} Router::forward($\textbf{U}$):
 \State
     \State $[\textbf{Y}_h, \textbf{R}] \leftarrow \text{CS::updateOnInterest(\textbf{U})}$
-    \State $\textbf{Y}'_i \leftarrow \text{PIT::updateOnInterest(\textbf{R})}$
+    \State $\textbf{Y}_i \leftarrow \text{PIT::updateOnInterest(\textbf{R})}$
 %    \State $\textbf{B}' \leftarrow \textbf{B} \times \textbf{1}$
 %    \State $\textbf{L} \leftarrow$ diag$(\textbf{B}) \times$ \textbf{FIB}
-    \State $\textbf{Y}_i \leftarrow \textbf{FIB} \ \& \ (\textbf{Y}'_i \times {\textbf{1}^{|F|}}^{T})$
     \State $\textbf{Y}_d \leftarrow \text{PIT::updateOnData(\textbf{U})}$
     \State $F_{n,1:|F|,out} \leftarrow (\textbf{Y}_i + \textbf{Y}_h + \textbf{Y}_d)$
 
@@ -386,7 +393,7 @@ forwarding of Data packets.
 
 In our model we consider two forms of endpoints: clients $C$ and servers $S$. 
 Clients generate Interests for content, i.e. vectors in the form of \textbf{v} 
-in~\ref{eq:signal}, while servers hold caches in which content objects persist 
+in eq.~\ref{eq:signal}, while servers hold caches in which content objects persist 
 and are always available.\shortvertbreak
 
 The operation of servers is simple, basically consisting in mirroring the 
@@ -399,18 +406,35 @@ persistent CS:\shortvertbreak
 \State
     \State $\textbf{U}' \leftarrow \textbf{CS} \ \& \ \textbf{U}$ 
     \State
-    \State $\textbf{Y}_h \leftarrow \begin{bmatrix} \textbf{0}^{|O|} \times {\textbf{1}^{|F|}}^{T} \\ \textbf{U}'(1:|O|,:) \end{bmatrix}$ 
-    \State
+    \State $\textbf{Y}_h \leftarrow \begin{bmatrix} \textbf{0}^{|O| \times |F|} \\ \textbf{U}'(1:|O|,:) \end{bmatrix}$ 
     \State $F_{n,1:|F|,out} \leftarrow \textbf{Y}_h$
 
 \end{algorithmic}\shortvertbreak
 
 Clients generate Interest signals according 
-to some popularity distribution such as Zipf~\cite{6038471}. In our model, 
-clients $C$ take (...).
+to some popularity distribution such as Zipf~\cite{6038471}. In our model, each 
+client $C$ independently takes a $|O| \times 1$ vector $\textbf{q}$, containing 
+the Interest generation probabilities for each content object $O_o$, $q_o$. During 
+a simulation, at 
+some discrete time instant $n$, a client $C$ generates an Interest for content 
+object $O_o$ with probability $q_o$.
 
 \subsection{Cache Algorithms}
 \label{subsec:meth-caching-algs}
+
+In order to evaluate the feasibility of the proposed model, we consider two 
+well known cache algorithms, LRU~\cite{Johnson:1994:LOH:645920.672996} and 
+MRU~\cite{Chou:1985:EBM:1286760.1286772}, in addition to a Random caching policy, 
+which randomly evicts a content object cached at the CS, in the presence 
+of a new object to be cached. In practice, each different caching 
+algorithm constitutes a different implementation of the CS::updateOnData() 
+routine, mentioned in Section~\ref{subsec:meth-cs}, and basically defines 
+the `type' of CS for an NDN router as an input parameter.\shortvertbreak
+
+As the design of cache replacement policies has not been the 
+main purpose of this work, we do not explain the aforementioned algorithms in 
+detail. Their implementation has nevertheless been part of this work, and can 
+be consulted in~\url{github.com/adamiaonr/mtsp-project}.
 
 \subsection{Network Topologies}
 \label{subsec:meth-topologies}
@@ -421,7 +445,7 @@ integer index to each one of the network nodes, and so each elements $(i,j)$ of 
 matrix corresponds to interconnections between network entities with indexes $i$ and $j$. The 
 values at each $(i,j)$ position identify the \textbf{near end interface} of the 
 connection, i.e. the interface at entity $i$. E.g. the matrix \textbf{T} shown 
-in~\ref{eq:topo} encodes the topology shown in Figure~\ref{fig:fib-topo}. In this case, 
+in eq.~\ref{eq:topo} encodes the topology shown in Figure~\ref{fig:fib-topo}. In this case, 
 we attribute the integers 1 to 7 to the network entities, starting with the 
 clients $C_1$ to $C_3$, then routers $R_1$ and $R_2$ and 
 finally the servers $S_1$ and $S_2$.
@@ -436,10 +460,51 @@ finally the servers $S_1$ and $S_2$.
                 0 & 0 & 0 & 1 & 0 & 0 & 0               \\ 
                 0 & 0 & 0 & 0 & 1 & 0 & 0               \\ \end{bmatrix}
     \label{eq:topo}
-\end{equation}\shortvertbreak
+\end{equation}
 
 \subsection{`Connecting the Dots'}
 \label{subsec:meth-conn-dots}
+
+Given all the `pieces of the puzzle', we can now describe how the proposed model 
+behaves under simulation. A simulation is composed by two distinct phases: (1) 
+a setup phase, and (2) a round phase. During phase 1, the simulation engine 
+interprets (a) the topology matrix $\textbf{T}$, (b) the content parameters (number of 
+contents $|O|$ and popularity distribution $\textbf{q}$) and (c) the CS parameters 
+(size $|P|$ and type), creating the overall network entities --- routers, clients and 
+servers --- as well as the appropriate interconnections.\shortvertbreak
+
+In phase 2, given a number of rounds $|N|$, the simulation engine iteratively 
+executes the following algorithm:\shortvertbreak
+
+\begin{algorithmic}[1]
+
+\State \textbf{define} SimEngine::run():
+\State
+
+    \For{ ($N \leftarrow 1$; $N < |N|$; $N$++)} 
+
+        \ForAll{$C_c$}
+            \State $C_c$.requestContent()
+        \EndFor
+        \ForAll{$R_r$}
+            \State $R_r$.forward()
+        \EndFor
+        \ForAll{$S_s$}
+            \State $S_s$.mirror()
+        \EndFor
+
+    \EndFor
+
+\end{algorithmic}\shortvertbreak
+
+Each simulation round $N$ consists in a simple sequence of steps: (1) 
+having clients generate Interest signals and pushing them to connected routers; 
+(2) having routers process Interest and Data packets, according to the Router::forward() 
+routine, defined in Section~\ref{subsec:meth-fib}; and finally having servers 
+perform the mirroring process specified in Section~\ref{subsec:meth-endpoints}. 
+The topology setup performed during phase 1 guarantees the appropriate flow of 
+Interest and Data signals between the input and output ports of the interfaces 
+of the various network components.
 
 \subsection{Implementation}
 \label{subsec:meth-impl}

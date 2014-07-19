@@ -30,7 +30,7 @@ $\alpha \in \{0.25, 0.5, 1, 2\}$, depicted in Figure~\ref{fig:zipf}.\shortvertbr
 \begin{figure}[h!]
 
     \centering
-    \includegraphics[width=0.45\textwidth]{figures/pop.pdf}
+    \includegraphics[width=0.40\textwidth]{figures/pop.pdf}
     \cprotect\caption{Content popularity distribution, for $c = 0.8$ and 
         $\alpha \in \{0.25, 0.5, 1, 2\}$.}
     \label{fig:zipf}
@@ -59,7 +59,7 @@ shown in Figure~\ref{fig:exp-setup-nettop-tree}.\shortvertbreak
     }
 
     \subfigure[]{
-        \includegraphics[width=0.45\textwidth] {figures/exp-setup-nettop-tree.png}
+        \includegraphics[width=0.40\textwidth] {figures/exp-setup-nettop-tree.png}
         %\includegraphics[width=0.30\textwidth] {figures/fib-topo.png}
         \label{fig:exp-setup-nettop-tree}
     }
@@ -140,22 +140,45 @@ The captions on the figures enclose the respective experimental parameters.\shor
 
 \begin{figure}[h!]
     \centering
+
     \subfigure[]{
-        \includegraphics[width=0.45\textwidth] {figures/experiments/cascade/LRU/25/6-2.pdf}
+        \includegraphics[width=0.40\textwidth] {figures/experiments/cascade/LRU/25/6-2.pdf}
         %\includegraphics[width=0.30\textwidth] {figures/fib-topo.pdf}
-        \label{fig:exp-results-topologies-cascade}
+        \label{fig:exp-results-topologies-cascade-lru}
     }
 
     \subfigure[]{
-        \includegraphics[width=0.45\textwidth] {figures/experiments/tree/LRU/25/6-2.pdf}
+        \includegraphics[width=0.40\textwidth] {figures/experiments/cascade/MRU/25/6-2.pdf}
         %\includegraphics[width=0.30\textwidth] {figures/fib-topo.pdf}
-        \label{fig:exp-results-topologies-tree}
+        \label{fig:exp-results-topologies-cascade-mru}
     }
 
     \cprotect\caption{Number of Interests\slash Data packets sent\slash received 
-        per topology level, for different topologies: cascade (a), binary tree (b). 
-        $|P| = 25$, $\alpha = 1$, LRU caching.}
-    \label{fig:exp-results-topologies}
+        per topology level, for different cache algorithms: LRU (a), MRU (b). 
+        Cascade topology, $|P| = 25$, $\alpha = 1$, LRU caching.}
+    \label{fig:exp-results-topologies-cascade}
+
+\end{figure}
+
+\begin{figure}[h!]
+    \centering
+
+    \subfigure[]{
+        \includegraphics[width=0.40\textwidth] {figures/experiments/tree/LRU/25/6-2.pdf}
+        %\includegraphics[width=0.30\textwidth] {figures/fib-topo.pdf}
+        \label{fig:exp-results-topologies-tree-lru}
+    }
+
+    \subfigure[]{
+        \includegraphics[width=0.40\textwidth] {figures/experiments/tree/MRU/25/6-2.pdf}
+        %\includegraphics[width=0.30\textwidth] {figures/fib-topo.pdf}
+        \label{fig:exp-results-topologies-tree-mru}
+    }
+
+    \cprotect\caption{Number of Interests\slash Data packets sent\slash received 
+        per topology level, for different cache algorithms: LRU (a), MRU (b). 
+        Binary tree topology, $|P| = 25$, $\alpha = 1$, MRU caching.}
+    \label{fig:exp-results-topologies-tree}
 
 \end{figure}
 
@@ -165,19 +188,19 @@ The captions on the figures enclose the respective experimental parameters.\shor
 \begin{figure}[h!]
     \centering
     \subfigure[]{
-        \includegraphics[width=0.45\textwidth] {figures/experiments/cascade/LRU/25/6-3.pdf}
+        \includegraphics[width=0.40\textwidth] {figures/experiments/cascade/LRU/25/6-3.pdf}
         %\includegraphics[width=0.30\textwidth] {figures/fib-topo.pdf}
         \label{fig:exp-results-cache-alg-cascade-lru}
     }
 
     \subfigure[]{
-        \includegraphics[width=0.45\textwidth] {figures/experiments/cascade/MRU/25/6-3.pdf}
+        \includegraphics[width=0.40\textwidth] {figures/experiments/cascade/MRU/25/6-3.pdf}
         %\includegraphics[width=0.30\textwidth] {figures/fib-topo.pdf}
         \label{fig:exp-results-cache-alg-cascade-mru}
     }
 
     \subfigure[]{
-        \includegraphics[width=0.45\textwidth] {figures/experiments/cascade/RANDOM/25/6-3.pdf}
+        \includegraphics[width=0.40\textwidth] {figures/experiments/cascade/RANDOM/25/6-3.pdf}
         %\includegraphics[width=0.30\textwidth] {figures/fib-topo.pdf}
         \label{fig:exp-results-cache-alg-cascade-random}
     }
@@ -192,47 +215,53 @@ The captions on the figures enclose the respective experimental parameters.\shor
 \begin{figure}[h!]
     \centering
     \subfigure[]{
-        \includegraphics[width=0.45\textwidth] {figures/experiments/tree/LRU/25/6-3.pdf}
+        \includegraphics[width=0.40\textwidth] {figures/experiments/tree/LRU/25/6-3.pdf}
         %\includegraphics[width=0.30\textwidth] {figures/fib-topo.pdf}
-        \label{fig:exp-results-cache-alg-lru}
+        \label{fig:exp-results-cache-alg-tree-lru}
     }
 
     \subfigure[]{
-        \includegraphics[width=0.45\textwidth] {figures/experiments/tree/MRU/25/6-3.pdf}
+        \includegraphics[width=0.40\textwidth] {figures/experiments/tree/MRU/25/6-3.pdf}
         %\includegraphics[width=0.30\textwidth] {figures/fib-topo.pdf}
-        \label{fig:exp-results-cache-alg-mru}
+        \label{fig:exp-results-cache-alg-tree-mru}
     }
 
     \subfigure[]{
-        \includegraphics[width=0.45\textwidth] {figures/experiments/tree/RANDOM/25/6-3.pdf}
+        \includegraphics[width=0.40\textwidth] {figures/experiments/tree/RANDOM/25/6-3.pdf}
         %\includegraphics[width=0.30\textwidth] {figures/fib-topo.pdf}
-        \label{fig:exp-results-cache-alg-random}
+        \label{fig:exp-results-cache-alg-tree-random}
     }
 
     \cprotect\caption{Cache hit\slash miss rates for different cache algorithms: LRU (a), MRU (b) 
         and Random caching (c). Binary tree topology, $|L| = 5$, $|C| = 8$, 
         $|R| = 7$ and $|S| = 1$, $|P| = 25$, $\alpha = 1$.}
-    \label{fig:exp-results-cache-alg}
+    \label{fig:exp-results-cache-alg-tree}
 
 \end{figure}
 
 \begin{figure}[h!]
     \centering
     \subfigure[]{
-        \includegraphics[width=0.45\textwidth] {figures/experiments/cascade/LRU/25/6-5.pdf}
+        \includegraphics[width=0.40\textwidth] {figures/experiments/cascade/LRU/25/6-5.pdf}
         %\includegraphics[width=0.30\textwidth] {figures/fib-topo.pdf}
         \label{fig:exp-results-latency-cascade-lru}
     }
 
     \subfigure[]{
-        \includegraphics[width=0.45\textwidth] {figures/experiments/cascade/RANDOM/25/6-5.pdf}
+        \includegraphics[width=0.40\textwidth] {figures/experiments/cascade/MRU/25/6-5.pdf}
+        %\includegraphics[width=0.30\textwidth] {figures/fib-topo.pdf}
+        \label{fig:exp-results-latency-cascade-mru}
+    }
+
+    \subfigure[]{
+        \includegraphics[width=0.40\textwidth] {figures/experiments/cascade/RANDOM/25/6-5.pdf}
         %\includegraphics[width=0.30\textwidth] {figures/fib-topo.pdf}
         \label{fig:exp-results-latency-cascade-random}
     }
 
     \cprotect\caption{Received Interests to original requests ratio, per content 
-        object and network level. Different cache algorithms --- LRU (a) and 
-        random caching (b) --- cascade topology, $|L| = 5$, $|C| = 1$, 
+        object and network level. Different cache algorithms --- LRU (a), MRU (b) and 
+        random caching (c) --- cascade topology, $|L| = 5$, $|C| = 1$, 
         $|R| = 3$ and $|S| = 1$, $|P| = 25$, $\alpha = 1$.}
     \label{fig:exp-results-latency-cascade}
 
@@ -241,22 +270,84 @@ The captions on the figures enclose the respective experimental parameters.\shor
 \begin{figure}[h!]
     \centering
     \subfigure[]{
-        \includegraphics[width=0.45\textwidth] {figures/experiments/tree/LRU/25/6-5.pdf}
+        \includegraphics[width=0.40\textwidth] {figures/experiments/tree/LRU/25/6-5.pdf}
         %\includegraphics[width=0.30\textwidth] {figures/fib-topo.pdf}
         \label{fig:exp-results-latency-tree-lru}
     }
 
     \subfigure[]{
-        \includegraphics[width=0.45\textwidth] {figures/experiments/tree/RANDOM/25/6-5.pdf}
+        \includegraphics[width=0.40\textwidth] {figures/experiments/tree/MRU/25/6-5.pdf}
+        %\includegraphics[width=0.30\textwidth] {figures/fib-topo.pdf}
+        \label{fig:exp-results-latency-tree-mru}
+    }
+
+    \subfigure[]{
+        \includegraphics[width=0.40\textwidth] {figures/experiments/tree/RANDOM/25/6-5.pdf}
         %\includegraphics[width=0.30\textwidth] {figures/fib-topo.pdf}
         \label{fig:exp-results-latency-tree-random}
     }
 
     \cprotect\caption{Received Interests to original requests ratio, per content 
-        object and network level. Different cache algorithms --- LRU (a) and 
-        random caching (b) --- binary tree topology, $|L| = 5$, $|C| = 8$, 
+        object and network level. Different cache algorithms --- LRU (a), MRU (b) and 
+        random caching (c) --- binary tree topology, $|L| = 5$, $|C| = 8$, 
         $|R| = 7$ and $|S| = 1$, $|P| = 25$, $\alpha = 1$.}
     \label{fig:exp-results-latency-tree}
+
+\end{figure}
+
+\begin{figure}[h!]
+    \centering
+    \subfigure[]{
+        \includegraphics[width=0.40\textwidth] {figures/experiments/cascade/LRU/25/6-4.pdf}
+        %\includegraphics[width=0.30\textwidth] {figures/fib-topo.pdf}
+        \label{fig:exp-results-time-cascade-lru}
+    }
+
+    \subfigure[]{
+        \includegraphics[width=0.40\textwidth] {figures/experiments/cascade/MRU/25/6-4.pdf}
+        %\includegraphics[width=0.30\textwidth] {figures/fib-topo.pdf}
+        \label{fig:exp-results-time-cascade-mru}
+    }
+
+    \subfigure[]{
+        \includegraphics[width=0.40\textwidth] {figures/experiments/cascade/RANDOM/25/6-4.pdf}
+        %\includegraphics[width=0.30\textwidth] {figures/fib-topo.pdf}
+        \label{fig:exp-results-time-cascade-random}
+    }
+
+    \cprotect\caption{Relative time spent at cache per content object. 
+        Different cache algorithms --- LRU (a), MRU (b) and 
+        random caching (c) --- cascade topology, $|L| = 5$, $|C| = 1$, 
+        $|R| = 3$ and $|S| = 1$, $|P| = 25$, $\alpha = 1$.}
+    \label{fig:exp-results-time-cascade}
+
+\end{figure}
+
+\begin{figure}[h!]
+    \centering
+    \subfigure[]{
+        \includegraphics[width=0.40\textwidth] {figures/experiments/tree/LRU/25/6-4.pdf}
+        %\includegraphics[width=0.30\textwidth] {figures/fib-topo.pdf}
+        \label{fig:exp-results-time-tree-lru}
+    }
+
+    \subfigure[]{
+        \includegraphics[width=0.40\textwidth] {figures/experiments/tree/MRU/25/6-4.pdf}
+        %\includegraphics[width=0.30\textwidth] {figures/fib-topo.pdf}
+        \label{fig:exp-results-time-tree-mru}
+    }
+
+    \subfigure[]{
+        \includegraphics[width=0.40\textwidth] {figures/experiments/tree/RANDOM/25/6-4.pdf}
+        %\includegraphics[width=0.30\textwidth] {figures/fib-topo.pdf}
+        \label{fig:exp-results-time-tree-random}
+    }
+
+    \cprotect\caption{Relative time spent at cache per content object. 
+        Different cache algorithms --- LRU (a), MRU (b) and 
+        random caching (c) --- binary tree topology, $|L| = 5$, $|C| = 8$, 
+        $|R| = 7$ and $|S| = 1$, $|P| = 25$, $\alpha = 1$.}
+    \label{fig:exp-results-time-tree}
 
 \end{figure}
 

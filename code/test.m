@@ -85,13 +85,13 @@ saveas(gcf, '/home/adamiaonr/Dropbox/Workbench/PhD/mtsp/project/report/figures/p
 
 %% 1.2) simulation rounds
 
-% for j = 1:numel(cs_size)
-% 
-%     simulate(content_n, content_popularity(3,:), cs_size(j), 'LRU', round_n, topology, clnt_n, rtr_n, rtr_level, srvr_n, figure_dir_cascade);
-%     simulate(content_n, content_popularity(3,:), cs_size(j), 'MRU', round_n, topology, clnt_n, rtr_n, rtr_level, srvr_n, figure_dir_cascade);
-%     simulate(content_n, content_popularity(3,:), cs_size(j), 'RANDOM', round_n, topology, clnt_n, rtr_n, rtr_level, srvr_n, figure_dir_cascade);
-%     
-% end
+for j = 1:numel(cs_size)
+
+    simulate(content_n, content_popularity(3,:), cs_size(j), 'LRU', round_n, topology, clnt_n, rtr_n, rtr_level, srvr_n, figure_dir_cascade);
+    simulate(content_n, content_popularity(3,:), cs_size(j), 'MRU', round_n, topology, clnt_n, rtr_n, rtr_level, srvr_n, figure_dir_cascade);
+%    simulate(content_n, content_popularity(3,:), cs_size(j), 'RANDOM', round_n, topology, clnt_n, rtr_n, rtr_level, srvr_n, figure_dir_cascade);
+    
+end
 
 %% 2.1) overall simulation parameters (tree topology)
 
@@ -151,10 +151,10 @@ rtr_level = [
 
 %% 2.2) simulation rounds
 
-% for j = 1:numel(cs_size)
-% 
-%     simulate(content_n, content_popularity(3,:), cs_size(j), 'LRU', round_n, topology, clnt_n, rtr_n, rtr_level, srvr_n, figure_dir_tree);
-%     simulate(content_n, content_popularity(3,:), cs_size(j), 'MRU', round_n, topology, clnt_n, rtr_n, rtr_level, srvr_n, figure_dir_tree);
-%     simulate(content_n, content_popularity(3,:), cs_size(j), 'RANDOM', round_n, topology, clnt_n, rtr_n, rtr_level, srvr_n, figure_dir_tree);
-%     
-% end
+for j = 1:numel(cs_size)
+
+    simulate(content_n, content_popularity(3,:), cs_size(j), 'LRU', round_n, topology, clnt_n, rtr_n, rtr_level, srvr_n, figure_dir_tree);
+    simulate(content_n, content_popularity(3,:), cs_size(j), 'MRU', round_n, topology, clnt_n, rtr_n, rtr_level, srvr_n, figure_dir_tree);
+%    simulate(content_n, content_popularity(3,:), cs_size(j), 'RANDOM', round_n, topology, clnt_n, rtr_n, rtr_level, srvr_n, figure_dir_tree);
+    
+end
