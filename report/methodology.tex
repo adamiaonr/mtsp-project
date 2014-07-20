@@ -307,7 +307,7 @@ Similarly to the PIT, the operations related to the CS are implemented by two
 routines: \textbf{CS::updateOnInterest()} and \textbf{CS::updateOnData()}. While 
 the behavior of CS::updateOnData() is specific to a particular cache 
 algorithm (see Section~\ref{subsec:meth-caching-algs}), that of CS::updateOnInterest() 
-is rather general, consisting in the generation of a pair of $|O| \times |F|$ 
+is rather general, consisting in the generation of a pair of $2\,|O| \times |F|$ 
 matrices, $[\textbf{Y}_h, \textbf{R}]$. In short, $\textbf{Y}_h$ encodes 
 the Data packets for which there are cache hits, already assigned to the 
 appropriate interface columns; and $\textbf{R}$ encodes all the Interest signals 
