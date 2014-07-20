@@ -182,7 +182,7 @@ of all the interfaces $F_{r,f}$, at some router $R_r$:
 \begin{algorithmic}[1]
 
 \State \textbf{define} PIT::updateOnInterest(\textbf{U}):
-\State
+    \Statex[2]
     \State $\textbf{U}' \leftarrow \textbf{U}(1:|O|,:)$
 %    \State $\textbf{D} \leftarrow$ diag$(\neg(\textbf{PIT} \times \textbf{1}))$
     \State $\textbf{Y}'_i \leftarrow$ $\neg(\textbf{PIT} \times \textbf{1}^{|F|}) \ \& \ (\textbf{U}' \times \textbf{1}^{|F|})$
@@ -196,27 +196,27 @@ of all the interfaces $F_{r,f}$, at some router $R_r$:
 
 Upon the reception of Interest signals, i.e. $\textbf{U}'$ (the first $|O|$ rows 
 of $\textbf{U}$), we first identify the content items $O_o$, or the row indexes $o$ of the 
-\textbf{PIT}, for which there are \textbf{no} pending Interests (line 4). For 
+\textbf{PIT}, for which there are \textbf{no} pending Interests (line 3). For 
 convenience, we often recur to binary operations (negation `$\neg$', 
-conjunction `$\&$', disjunction `$|$') over matrices: e.g. in line 4, after 
+conjunction `$\&$', disjunction `$|$') over matrices: e.g. in line 3, after 
 summing all columns of the \textbf{PIT}\footnote{We use the notation $\textbf{1}^{m}$ for the $m \times 1$
 sum vector, i.e. $\textbf{1}^{m} = [1\,1\,...\,1]^{T}$, and $\textbf{1}^{m \times n}$ for an $m \times n$ 
 matrix solely composed by '1'. Equivalently, we also use $\textbf{0}^{m}$ and $\textbf{0}^{m \times n}$.}, we negate the 
 result, obtaining a binary encoded $|O| \times 1$ 
 column vector which indicates the absence (encoded as  `1') and presence 
 (encoded as `0') of pending Interests for some content object $O_o$. Still in 
-line 4, we obtain a $|O| \times 1$ column vector, $\textbf{Y}'_i$, which encodes 
+line 3, we obtain a $|O| \times 1$ column vector, $\textbf{Y}'_i$, which encodes 
 Interest signals which are not already stored in the PIT, and that the NDN router needs to forward upstream. This is 
 accomplished by taking the logic AND, `$\&$', between $\neg(\textbf{PIT} \times \textbf{1}^{|F|})$ and 
 $\textbf{U}'$. Note that even 
 if $\textbf{U}'$ includes some $i_{O_o} > 1$, we only need to forward one Interest 
 over the interfaces specified in the FIB, and so the binary encoding of $\textbf{Y}'_i$, 
 resulting from the use of binary operations, neatly serves our purposes. The operation 
-in line 5 results in a final form of $\textbf{Y}'_i$, which assigns the 
+in line 4 results in a final form of $\textbf{Y}'_i$, which assigns the 
 Interest signals to be forwarded upstream to the appropriate interfaces, according to the FIB. 
-In line 6 we finally obtain $\textbf{Y}_i$, a $2\,|O| \times |F|$ matrix compliant 
+In line 5 we finally obtain $\textbf{Y}_i$, a $2\,|O| \times |F|$ matrix compliant 
 with the format shown in eq.~\ref{eq:b}. 
-In line 7, the 
+In line 6, the 
 contents of the \textbf{PIT} are updated by performing a logic OR, `$|$', with $\textbf{U}'$, so 
 that it registers all the newly received 
 Interest signals and their correspondence to interfaces. This last step is important, 
@@ -226,7 +226,7 @@ interfaces.\shortvertbreak
 \begin{algorithmic}[1]
 
 \State \textbf{define} PIT::updateOnData($\textbf{U}$):
-\State
+    \Statex[2]
     \State $\textbf{U}' \leftarrow \textbf{U}(|O|+1:2\,|O|,:)$
     \State $\textbf{G} \leftarrow (\textbf{U}' \times \textbf{1}^{|F|}) \times {\textbf{1}^{|F|}}^{T}$
 %    \State $\textbf{D} \leftarrow \textbf{U}' \times \textbf{1}$
@@ -243,14 +243,14 @@ Note that
 the objective of PIT::updateOnData() is the reverse operation of PIT::updateOnInterest(), i.e. forwarding Data 
 packets over the interfaces for which there is a registered Interest in the \textbf{PIT}, with 
 the result encoded in matrix $\textbf{Y}_d$. $\textbf{G}$ consists in a $|O| \times |F|$ matrix, which expands the single-column 
-vector $\textbf{U}' \times \textbf{1}^{|F|}$ to $|F|$ columns (line 4), making it ready 
-for the subsequent AND (`\&') operations (lines 5 and 7). The final 
-step of the operation (line 7) consists in erasing 
+vector $\textbf{U}' \times \textbf{1}^{|F|}$ to $|F|$ columns (line 3), making it ready 
+for the subsequent AND (`\&') operations (lines 4 and 6). The final 
+step of the operation (line 6) consists in erasing 
 all Interest registrations which have been successfully attended.\shortvertbreak
 
 As a final remark, we can now identify the \textbf{PIT} as one form of state 
 \textbf{x}, which is driven by the nonlinear dynamics specified on the 
-PIT::updateOnInterest() and PIT::updateOnData() routines (line 7, in both cases). 
+PIT::updateOnInterest() and PIT::updateOnData() routines (line 6, in both cases). 
 Furthermore, both routines also contribute to the generation of outputs, 
 in the form of matrices $\textbf{Y}_i$ and $\textbf{Y}_d$.\shortvertbreak
 
@@ -351,13 +351,15 @@ as CS::updateOnInterest():\shortvertbreak
 \begin{algorithmic}[1]
 
 \State \textbf{define} Router::forward($\textbf{U}$):
-\State
+    \Statex[2]
     \State $[\textbf{Y}_h, \textbf{R}] \leftarrow \text{CS::updateOnInterest(\textbf{U})}$
     \State $\textbf{Y}_i \leftarrow \text{PIT::updateOnInterest(\textbf{R})}$
 %    \State $\textbf{B}' \leftarrow \textbf{B} \times \textbf{1}$
 %    \State $\textbf{L} \leftarrow$ diag$(\textbf{B}) \times$ \textbf{FIB}
     \State $\textbf{Y}_d \leftarrow \text{PIT::updateOnData(\textbf{U})}$
-    \State $F_{n,1:|F|,out} \leftarrow (\textbf{Y}_i + \textbf{Y}_h + \textbf{Y}_d)$
+%    \State $F_{n,1:|F|,out} \leftarrow (\textbf{Y}_i + \textbf{Y}_h + \textbf{Y}_d)$
+    \State $\textbf{Y} \leftarrow (\textbf{Y}_i + \textbf{Y}_h + \textbf{Y}_d)$
+    \State \Return $\textbf{Y}$
 
 \end{algorithmic}\shortvertbreak
 
@@ -367,11 +369,14 @@ there were no cache hits. We use \textbf{R} as an input to PIT::updateOnInterest
 ultimately obtaining $\textbf{Y}_i$, the output Interest signals. Finally, 
 the router processes the Data input signals on \textbf{U}, generating the 
 Data output signals, $\textbf{Y}_d$, according to the behavior of 
-PIT::updateOnData(). The last 
-operation (line 6) refers to 
-the (parallelized) `filling' of the output ports of all the interfaces $F$ of router $R_r$, 
-with both $\textbf{Y}_i$, $\textbf{Y}_h$ and $\textbf{Y}_d$, which together 
-consist in the complete output matrix \textbf{Y}.\shortvertbreak
+PIT::updateOnData(). The forward operation finally returns a complete output 
+matrix \textbf{Y}, consisting in the combination of 
+$\textbf{Y}_i$, $\textbf{Y}_h$ and $\textbf{Y}_d$.\shortvertbreak
+%The last 
+%operation (line 6) refers to 
+%the (parallelized) `filling' of the output ports of all the interfaces $F$ of router $R_r$, 
+%with both $\textbf{Y}_i$, $\textbf{Y}_h$ and $\textbf{Y}_d$, which together 
+%consist in the complete output matrix \textbf{Y}.\shortvertbreak
 
 In our model, the composition of the \textbf{FIB} is established at an initial phase, 
 not suffering any further alterations (more details in 
@@ -403,11 +408,13 @@ persistent CS:\shortvertbreak
 \begin{algorithmic}[1]
 
 \State \textbf{define} Server::mirror(\textbf{U}):
-\State
+\Statex[2]
     \State $\textbf{U}' \leftarrow \textbf{CS} \ \& \ \textbf{U}$ 
-    \State
+    \Statex[2]
     \State $\textbf{Y}_h \leftarrow \begin{bmatrix} \textbf{0}^{|O| \times |F|} \\ \textbf{U}'(1:|O|,:) \end{bmatrix}$ 
-    \State $F_{n,1:|F|,out} \leftarrow \textbf{Y}_h$
+%    \State $F_{n,1:|F|,out} \leftarrow \textbf{Y}_h$
+    \Statex[2]
+    \State \Return $\textbf{Y}_h$
 
 \end{algorithmic}\shortvertbreak
 
@@ -482,26 +489,37 @@ executes the following algorithm:\shortvertbreak
 \State
 
     \For{ ($N \leftarrow 1$; $N < |N|$; $N$++)} 
-
+        \Statex[2]
         \ForAll{$C_c$}
-            \State $C_c$.requestContent()
+            \State $\textbf{U} \leftarrow C_c$.requestContent()
+            \State $C_c$.putOutPorts(\textbf{U})
         \EndFor
+        \Statex[2]
         \ForAll{$R_r$}
-            \State $R_r$.forward()
+            \State $\textbf{U} \leftarrow R_r$.getInPorts()
+            \State $\textbf{Y} \leftarrow R_r$.forward(\textbf{U})
+            \State $R_r$.putOutPorts(\textbf{Y})
         \EndFor
+        \Statex[2]
         \ForAll{$S_s$}
-            \State $S_s$.mirror()
+            \State $\textbf{U} \leftarrow S_s$.getInPorts()
+            \State $\textbf{Y}_h \leftarrow S_s$.mirror(\textbf{U})
+            \State $S_s$.putOutPorts($\textbf{Y}_h$)
         \EndFor
-
+        \Statex[2]
     \EndFor
 
 \end{algorithmic}\shortvertbreak
 
 Each simulation round $N$ consists in a simple sequence of steps: (1) 
-having clients generate Interest signals and pushing them to connected routers; 
-(2) having routers process Interest and Data packets, according to the Router::forward() 
-routine, defined in Section~\ref{subsec:meth-fib}; and finally having servers 
-perform the mirroring process specified in Section~\ref{subsec:meth-endpoints}. 
+having clients generate Interest signals and pushing them to the output ports of their interfaces; 
+(2) having routers fetch their interfaces' input ports, process Interest and 
+Data packets, according to the Router::forward() 
+routine, defined in Section~\ref{subsec:meth-fib}, and pushing the result to their 
+interfaces' output ports; and finally (3) having servers load 
+their interfaces' input ports, 
+perform the mirroring process specified in Section~\ref{subsec:meth-endpoints}, and 
+pushing the result to their interfaces' output ports. 
 The topology setup performed during phase 1 guarantees the appropriate flow of 
 Interest and Data signals between the input and output ports of the interfaces 
 of the various network components.
