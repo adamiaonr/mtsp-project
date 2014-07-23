@@ -36,22 +36,27 @@ PITs.\shortvertbreak
 
 Figures~\ref{fig:exp-results-cache-alg-cascade} and~\ref{fig:exp-results-cache-alg-tree} 
 show the cache hit\slash miss rates for the different topologies and all considered 
-caching algorithms. We can not a similarity in the trends of the LRU and Random caching 
-algorithms, favoring the most popular content, nevertheless with LRU favoring it 
-in a larger degree. For both topology types, level 2 (the first level after the 
-`layer' of clients) exhibits significantly larger cache hit rate values for the most 
-popular content than for the subsequent `upstream' levels. This indicates 
+caching algorithms. One can notice a similarity in the trends of the LRU and Random caching 
+algorithms, both favoring the most popular content, i.e. objects $O_o$ with 
+$1 \le o \le 30$. For both topology types and LRU policy, level 2 (the first level after the 
+`layer' of clients) exhibits significantly larger cache hit rates for the most 
+popular content than on subsequent `upstream' levels. This indicates 
 that CSs at level 2 become mostly occupied by popular content objects, hence explaining 
-some of the results previously analyzed in Figures~\ref{fig:exp-results-topologies-cascade} 
-and~\ref{fig:exp-results-topologies-tree}. Regarding topologies, 
-the differences between Figures~\ref{fig:exp-results-cache-alg-cascade-lru} 
-and~\ref{fig:exp-results-cache-alg-tree-lru} seem to indicate a larger `caching 
-capacity' for the binary tree topology, as it presents overall larger hit rate 
-values across all content objects. This is not surprising, due to the 
-larger number of routers (and hence cache capacity) per level. Note, however, 
-that such differences are 
-only verified with the LRU algorithm, being mitigated with Random caching. The 
-MRU algorithm does the opposite, 
+the results previously analyzed in Figures~\ref{fig:exp-results-topologies-cascade} 
+and~\ref{fig:exp-results-topologies-tree}. Such differences between levels are 
+only verified with the LRU algorithm, being mitigated with Random caching. This 
+behavior can be explained by the nature of the 
+two algorithms: upon the arrival of new Data packets at a full CS, the LRU 
+caching policy chooses infrequently requested content ($O_o$ with $o > 30$) for 
+eviction, while the Random caching algorithm does not discriminate 
+particular content indexes, choosing eviction candidates according to an 
+uniform distribution. Therefore, while with LRU `stockpiles' objects 
+$1 \le o \le 30$ at the first layer of caches (i.e. level 2), Random caching 
+distributes them over all levels.\shortvertbreak
+
+The 
+MRU algorithm --- see Figures~\ref{fig:exp-results-cache-alg-cascade-mru} 
+and~\ref{fig:exp-results-cache-alg-tree-mru} --- follows an opposite trend, 
 favoring the less popular content and `flattening' the overall hit rates (at lower 
 values). In fact, these results somehow show the unsuitability of the MRU cache 
 algorithm for the model of Interest signal generation we consider here, i.e. with 
@@ -64,6 +69,13 @@ in `bursts' and concentrated in specific time periods, favors popular content (w
 generation occurs more often and therefore exhibiting smaller intervals between occurrences), 
 despite our usage of independent inter-arrival times.\shortvertbreak
 
+The differences between 
+Figures~\ref{fig:exp-results-cache-alg-cascade-lru} 
+and~\ref{fig:exp-results-cache-alg-tree-lru} seem to indicate a larger `caching 
+capacity' for the binary tree topology, as it presents overall larger hit rate 
+values across all content objects. This is not surprising, due to the 
+larger number of routers (and hence cache capacity) per level.\shortvertbreak
+
 Figures~\ref{fig:exp-results-latency-cascade} and~\ref{fig:exp-results-latency-tree} show 
 the ratio of received Interests to original requests, per content object 
 and network level (including server(s) $S$), for both topology types considered in the 
@@ -74,7 +86,8 @@ the following aspects can be highlighted:
 
 \begin{itemize}
     \item All original Interest requests are 
-        received by level 2 (the first layer of routers after the clients), as expected;
+        received by level 2 (the first layer of routers after the clients), as expected, since 
+        we are not considering any packet losses between interconnected topology elements;
     \item For the LRU and Random cache algorithms, the ratio is greatly reduced for 
         the most popular content objects, with values $\sim0$ for the LRU algorithm, 
         indicating that these content instances are mostly cached and served at 
@@ -86,7 +99,9 @@ the following aspects can be highlighted:
         the ratio value of level 5 --- of the server $S$ --- is contained in the 
         interval $[0.5, 0.8]$, meaning 
         that more that $50\%$ of the Interest signals for $O_{100}$ need to actually 
-        reach $S$ to be satisfied);
+        reach $S$ to be satisfied). As the more popular content `hijacks' CS space 
+        at lower topology levels, being constantly refreshed by frequent cache 
+        hits, Interest signals for unpopular content must reach CSs at higher levels;
     \item The ratio values for a given content object tend to decrease with the topology 
         levels, both as a result of (1) aggregation of pending Interests at PITs and 
         (2) cache hits.
@@ -95,7 +110,7 @@ the following aspects can be highlighted:
 One can note a difference between Figures~\ref{fig:exp-results-latency-cascade-lru} 
 and~\ref{fig:exp-results-latency-tree-lru}, both pertaining to the LRU cache 
 algorithm, but under different topologies: in the former, the differences in 
-ratio values between levels are absent, while in the latter, a clear difference 
+ratio values between levels are nearly absent, while in the latter, a clear difference 
 can be identified. The same pattern is evident in 
 Figures~\ref{fig:exp-results-topologies-cascade-lru} and~\ref{fig:exp-results-topologies-tree-lru}. 
 This behavior can be explained by the larger `caching capacity' of the binary 

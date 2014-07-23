@@ -561,6 +561,7 @@ figure();
 grid on;
 hold on;
 
+axis([0 content_n 0 1]);
 %axis square;
 
 xlabel('Content index');

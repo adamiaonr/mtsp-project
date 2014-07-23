@@ -13,6 +13,7 @@ pdf:
 	pdflatex -interaction=nonstopmode ${INPUT}.tex
 	pdflatex -interaction=nonstopmode ${INPUT}.tex
 	evince ${INPUT}.pdf
+	update-grive
 
 latex:
 	latex -interaction=nonstopmode ${INPUT}.tex

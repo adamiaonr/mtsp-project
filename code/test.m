@@ -87,9 +87,9 @@ saveas(gcf, '/home/adamiaonr/Dropbox/Workbench/PhD/mtsp/project/report/figures/p
 
 for j = 1:numel(cs_size)
 
-    simulate(content_n, content_popularity(3,:), cs_size(j), 'LRU', round_n, topology, clnt_n, rtr_n, rtr_level, srvr_n, figure_dir_cascade);
+%     simulate(content_n, content_popularity(3,:), cs_size(j), 'LRU', round_n, topology, clnt_n, rtr_n, rtr_level, srvr_n, figure_dir_cascade);
     simulate(content_n, content_popularity(3,:), cs_size(j), 'MRU', round_n, topology, clnt_n, rtr_n, rtr_level, srvr_n, figure_dir_cascade);
-%    simulate(content_n, content_popularity(3,:), cs_size(j), 'RANDOM', round_n, topology, clnt_n, rtr_n, rtr_level, srvr_n, figure_dir_cascade);
+    simulate(content_n, content_popularity(3,:), cs_size(j), 'RANDOM', round_n, topology, clnt_n, rtr_n, rtr_level, srvr_n, figure_dir_cascade);
     
 end
 
@@ -153,8 +153,8 @@ rtr_level = [
 
 for j = 1:numel(cs_size)
 
-    simulate(content_n, content_popularity(3,:), cs_size(j), 'LRU', round_n, topology, clnt_n, rtr_n, rtr_level, srvr_n, figure_dir_tree);
+%     simulate(content_n, content_popularity(3,:), cs_size(j), 'LRU', round_n, topology, clnt_n, rtr_n, rtr_level, srvr_n, figure_dir_tree);
     simulate(content_n, content_popularity(3,:), cs_size(j), 'MRU', round_n, topology, clnt_n, rtr_n, rtr_level, srvr_n, figure_dir_tree);
-%    simulate(content_n, content_popularity(3,:), cs_size(j), 'RANDOM', round_n, topology, clnt_n, rtr_n, rtr_level, srvr_n, figure_dir_tree);
+    simulate(content_n, content_popularity(3,:), cs_size(j), 'RANDOM', round_n, topology, clnt_n, rtr_n, rtr_level, srvr_n, figure_dir_tree);
     
 end
